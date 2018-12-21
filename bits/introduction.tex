@@ -4,16 +4,293 @@
 
 \subsection{About this course}
 
+\begin{frame}{Objective}{}
+  \begin{block}{Objective}
+    Learn how to use different paradigms in a single application with modern \CCLang
 
-\section{Presentation of C++}
+    \begin{itemize}
+    \item
+      procedural programming
+    \item
+      object-oriented programming
+    \item
+      functional programming
+    \item
+      generic programming
+    \end{itemize}
+  \end{block}
+\end{frame}
 
-\subsection{C++ History}
+\begin{frame}{Organisation}{}
+  \begin{block}{Hours}
+    \begin{itemize}
+    \item
+      Lecture: 5 $\times$ 1h30
+    \item
+      Test: 1 $\times$ 1h30
+    \item
+      Laboratory: 6 $\times$ 3h00
+    \end{itemize}
+  \end{block}
 
-\subsection{C++ Paradigms}
+  \begin{block}{Evaluation}
+    \begin{itemize}
+    \item
+      Multiple choice test (50\%)
+    \item
+      Laboratory project in \CCLang (50\%)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Resources}{}
+  \begin{block}{Online}
+    \begin{itemize}
+    \item
+      \CCLang Reference: \url{http://en.cppreference.com/w/cpp}
+    \item
+      \CCLang FAQ: \url{http://isocpp.org/faq}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Books}
+    \begin{thebibliography}{}
+    \bibitem{Stroustrup}
+      Bjarne Stroustrup.
+      \newblock {\em The \CCLang Programming Language}.
+      \newblock 4th edition, 2013, Addison--Wesley
+    \end{thebibliography}
+  \end{block}
+\end{frame}
+
+\section{Presentation of \CCLang}
+
+\subsection{\CCLang Origins}
+
+% Source: "Evolving a language in and for the real world: 1991-2006", Bjarne Stroustrup
+
+\begin{frame}{\CCLang History (1/3)}{}
+  \begin{block}{Early \CCLang (1979--1998)}
+    \begin{itemize}
+    \item
+      1979: "C with Classes", Bjarne Stroustrup, AT\&T Bell Labs
+    \item
+      1983: "C with Classes" $\leadsto$ \CCLang; CFront 1.0
+    \item
+      1985: \emph{The \CCLang Programming Language}, 1st edition, Bjarne Stroustrup
+    \item
+      1989: \emph{The Annotated \CCLang Reference Manual}, Bjarne Stroustrup; CFront 2.0
+    \item
+      1991: First ISO/IEC JTC1/SC22/WG21 meeting; CFront 3.0
+    \item
+      1992: \emph{Effective \CCLang}, 1st edition, Scott Meyers
+    \item
+      1993: Standard Template Library, Alexander Stepanov, HP Labs
+    \item
+      1994: \emph{The Design and Evolution of \CCLang}, Bjarne Stroustrup
+    \item
+      1998: \emph{Effective \CCLang}, 2nd edition, Scott Meyers
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{\CCLang History (2/3)}{}
+  \begin{block}{Standard \CCLang (1998--2011)}
+    \begin{itemize}
+    \item
+      1998: ISO standardization, \CC{98}
+    \item
+      2001: \emph{Modern \CCLang Design}, Andrei Alexandrescu
+    \item
+      2003: \CC{03}, minor revision
+    \item
+      2005: \emph{Effective \CCLang}, 3rd edition, Scott Meyers
+    \item
+      2006: Performance Technical Report
+    \item
+      2007: Library Technical Report 1 (TR1)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{\CCLang History (3/3)}{}
+  \begin{block}{Modern \CCLang (2011--)}
+    \begin{itemize}
+    \item
+      2011: \CC{11}, major revision
+      \begin{itemize}
+      \item[$\to$]
+        "Surprisingly, \CC{11} feels like a new language"
+      \end{itemize}
+    \item
+      2012: Standard \CCLang Foundation
+    \item
+      2014: \CC{14}, minor revision; \emph{Effective Modern \CCLang}, Scott Meyers
+    \item
+      2017: \CC{17}, major revision
+    \item
+      2020: \CC{20}, next major revision of the standard
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Design rules (1/4)}{}
+  \begin{block}{General rules}
+    \begin{enumerate}
+    \item
+      \CCLang's evolution must be driven by real problems.
+    \item
+      Don't get involved in a sterile quest for perfection.
+    \item
+      \CCLang must be useful \emph{now}.
+    \item
+      Every feature must have a reasonably obvious implementation.
+    \item
+      Always provide a transition path.
+    \item
+      \CCLang is a language, not a complete system.
+    \item
+      Provide comprehensive support for each supported style.
+    \item
+      Don't try to force people to use a specific programming style.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Design rules (2/4)}{}
+  \begin{block}{Design support rules}
+    \begin{enumerate}
+    \item
+      Support sound design notions.
+    \item
+      Provide facilities for program organization.
+    \item
+      Say what you mean.
+    \item
+      All features must be affordable.
+    \item
+      It is more important to allow a useful feature than to prevent every misuse.
+    \item
+      Support composition of software from separately developed parts.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Design Rules (3/4)}{}
+  \begin{block}{Language-technical rules}
+    \begin{enumerate}
+    \item
+      No implicit violations of the static type system.
+    \item
+      Provide as good support for user-defined types as for built-in types.
+    \item
+      Locality is good.
+    \item
+      Avoid order dependencies.
+    \item
+      If in doubt, pick the variant of a feature that is easiest to teach.
+    \item
+      Syntax matters (often in perverse ways).
+    \item
+      Preprocessor usage should be eliminated.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Desing Rules (4/4)}{}
+  \begin{block}{Low-level programming support rules}
+    \begin{enumerate}
+    \item
+      Use traditional (dumb) linkers.
+    \item
+      No gratuitous incompatibilities with C.
+    \item
+      Leave no room for a lower-level language below C++ (except assembler).
+    \item
+      What you don’t use, you don’t pay for (zero-overhead rule).
+    \item
+      If in doubt, provide means for manual control.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\subsection{\CCLang Paradigms}
+
+\begin{frame}{Procedural programming}{}
+  \begin{definition}[Procedural programming]
+  \end{definition}
+  \begin{block}{Procedural programming in \CCLang}
+    \CCLang is a procedural programming language.
+    \begin{itemize}
+    \item
+    \item
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Object-oriented programming}{}
+  \begin{definition}[Object-oriented programming]
+  \end{definition}
+  \begin{block}{Object-oriented programming in \CCLang}
+    \CCLang is an object-oriented programming language.
+    \begin{itemize}
+    \item
+    \item
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Functional programming}{}
+  \begin{definition}[Functional programming]
+  \end{definition}
+  \begin{block}{Functional programming in \CCLang}
+    \CCLang is \strong{not} a functional programming language\ldots
+    \begin{itemize}
+    \item
+      No curryfication
+    \end{itemize}
+    \ldots but has elements of functional programming language.
+    \begin{itemize}
+    \item
+      Functors and lambda functions (closures)
+    \item
+      \lstinline!std::function!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Generic programming}{}
+  \begin{definition}[Generic programming]
+  \end{definition}
+  \begin{block}{Generic programming in \CCLang}
+    \CCLang is a generic programming language.
+    \begin{itemize}
+    \item
+    \item
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Using multiple paradigms}{}
+  \begin{example}
+    \sourceinput{snippets/multi_paradigm.cc}
+
+    \begin{itemize}
+    \item
+      Procedural: \lstinline!drawAll()!
+    \item
+      Object-oriented: \lstinline!shape->draw()!
+    \item
+      Functional: \lstinline![](const Shape *shape) \{ \}!
+    \item
+      Generic: \lstinline!std::vector<Shape*>! and \lstinline!std::for_each!
+    \end{itemize}
+  \end{example}
+\end{frame}
 
 % https://fr.wikipedia.org/wiki/Paradigme_(programmation)
 
-\section{What you may know about C++}
+\section{What you may know about \CCLang}
 
 \subsection{Language}
 

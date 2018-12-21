@@ -17,12 +17,22 @@
 \usepackage{graphicx}
 \usepackage{translator}
 \usepackage{wasysym}
+\usepackage{relsize}
 \usepackage{color}
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{algpseudocode}
 \usepackage{tikz}
 \usepackage{xspace}
+
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+
+\lstset{
+language=[11]C++,
+basicstyle=\ttfamily,
+keywordstyle=\bfseries\color{darkgreen}
+}
 
 \title{Multi-Paradigm Programming}
 \subtitle{Modern C++ programming}
@@ -48,7 +58,11 @@
 }
 
 \newcommand{\strong}[1]{\textbf{#1}}
-\newcommand{\sourceinput}[1]{\vspace{-2ex}\verbatiminput{#1}\vspace{-2ex}}
+\newcommand{\sourceinput}[1]{\vspace{-1ex}\lstinputlisting{#1}\vspace{-1ex}}
+
+\newcommand{\CCLang}{C\texttt{++}\xspace}
+\newcommand{\CC}[1]{C\texttt{++}#1\xspace}
+\newcommand{\Since}[1]{$^{\text{\bfseries\textcolor{darkgreen}{[C\texttt{++}#1]}}}$}
 
 \begin{document}
 
