@@ -338,12 +338,234 @@
 
 \subsection{Language}
 
-\subsubsection{Value category}
+\begin{frame}{The \CCLang language}{}
+  \begin{block}{What's in this section?}
+    Any interesting aspects that are not specific to a programming paradigm
+  \end{block}
 
-%   - lvalue, rvalue, ... http://en.cppreference.com/w/cpp/language/value_category
+  \begin{block}{What's \strong{not} in this section?}
+    Basic programming constructs that are present in other programming languages
+    \begin{itemize}
+    \item
+      Control flow statements: \lstinline!if!,  \lstinline!for!,  \lstinline!while!,  \lstinline!switch!, \ldots
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\subsubsection{Value categories}
+
+\begin{frame}{Expressions}{}
+  \begin{block}{Expressions}
+    Expressions are characterized by two properties:
+    \begin{itemize}
+    \item
+      a \emph{type}
+    \item
+      a \emph{value category}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Value categories before \CC{11}}
+    \begin{itemize}
+    \item
+      An \strong{lvalue expression} identifies an object ("locator value")
+      \begin{itemize}
+      \item[$\approx$]
+        what is on the left-hand side  of an assignment
+      \end{itemize}
+    \item
+      A \strong{rvalue expression} is an expression that is not an lvalue expression
+      \begin{itemize}
+      \item[$\approx$]
+        what is on the right-hand side of an assignment
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Value categories}{Overview}
+  \begin{block}{Value categories}
+    \begin{itemize}
+    \item
+      Primary categories: lvalue, prvalue, xvalue
+    \item
+      Mixed categories: glvalue, rvalue
+    \end{itemize}
+  \end{block}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \node[draw] (E) at ( 0, 0) { expression } ;
+      \node[draw] (G) at (-1,-1) { glvalue } ;
+      \node[draw] (R) at ( 1,-1) { rvalue } ;
+      \node[draw] (L) at (-2,-2) { lvalue } ;
+      \node[draw] (X) at ( 0,-2) { xvalue } ;
+      \node[draw] (P) at ( 2,-2) { prvalue } ;
+
+      \draw[->,>=stealth] (E) -- (G) ;
+      \draw[->,>=stealth] (E) -- (R) ;
+      \draw[->,>=stealth] (G) -- (L) ;
+      \draw[->,>=stealth] (G) -- (X) ;
+      \draw[->,>=stealth] (R) -- (X) ;
+      \draw[->,>=stealth] (R) -- (P) ;
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+% http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0135r0.html
+\begin{frame}{Value categories}{Definition (\CC{17})}
+  \begin{definitions}[Value categories]
+    \begin{itemize}
+    \item
+      A \strong{glvalue} ("generalized" lvalue) is an expression whose evaluation determines the identity of an object, bit-field, or function
+      \begin{itemize}
+      \item[$\to$]
+        \emph{glvalues produce locations}
+      \end{itemize}
+    \item
+      A \strong{prvalue} ("pure" rvalue) is an expression whose evaluation either:
+      \begin{itemize}
+      \item
+        computes the value of the operand of an operator (has no result object), or
+      \item
+        initializes an object or a bit-field (has a result object)
+      \item[$\to$]
+        \emph{prvalues performs initialization}
+      \end{itemize}
+    \item
+      An \strong{xvalue} (eXpiring value) is a glvalue that denotes an object or bit-field whose resources can be reused (usually near the end of its lifetime)
+    \item
+      An \strong{lvalue} is a glvalue that is not an xvalue
+    \item
+      An \strong{rvalue} is a prvalue or an xvalue.
+    \end{itemize}
+  \end{definitions}
+\end{frame}
+
+\begin{frame}{Properties of glvalues and rvalues}{}
+  \begin{block}{Properties of a glvalue expression (lvalue or xvalue)}
+    \begin{itemize}
+    \item
+      May be converted to a prvalue
+    \item
+      May be polymorphic (dynamic type $\neq$ static type)
+    \item
+      Can have incomplete type
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Properties of a rvalue expression (prvalue or xvalue)}
+    \begin{itemize}
+    \item
+      Has no address
+    \item
+      Can not be used as the left-hand of the built-in assignment operator
+    \item
+      May be used to initialize a const lvalue reference
+    \item
+      May be used to initialize an rvalue reference
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Properties of lvalues and prvalues}{}
+  \begin{block}{Properties of an lvalue expression}
+    \begin{itemize}
+    \item
+      Has an address
+    \item
+      If modifiable, may be used as the left-hand of the built-in assignment operator
+    \item
+      May be used to initialize an lvalue reference
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Properties of an prvalue expression}
+    \begin{itemize}
+    \item
+      Can not be polymorphic
+    \item
+      If non-class and non-array, can not cv-qualified
+    \item
+      Can not have incomplete type
+    \item
+      Can not have abstract class type
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Examples of lvalues}{}
+  \begin{examples}[lvalue expressions]
+    \begin{itemize}
+    \item
+      Name of a variable, function, data member (\lstinline!std::cin!)
+    \item
+      Function call or overloaded operator expression whose return type is lvalue reference (\lstinline!std::getline(std::cin, str)!, \lstinline!std::cout << 1!, \lstinline!++it!)
+    \item
+      Assignment and compound assignment expressions (\lstinline!a = b!, \lstinline!a += b!)
+    \item
+      Builtin pre-increment and pre-decrement expressions (\lstinline!++i!)
+    \item
+      Builtin indirection expression (\lstinline!*p!)
+    \item
+      Builtin subscript operator\manualfootnote (\lstinline!a[n]!)
+    \item
+      String literal (\lstinline!"Hello"!)
+    \item
+      Member of object expressions\manualfootnote (\lstinline!a.m!)
+    \item
+      Built-in member of pointer expression\manualfootnote (\lstinline!a->m!)
+    \end{itemize}
+
+    \raggedleft
+    \footnotesize
+    \manualfootnote with exceptions
+  \end{examples}
+\end{frame}
+
+\begin{frame}{Examples of prvalues}{}
+  \begin{examples}[prvalue expressions]
+    \begin{itemize}
+    \item
+      Literal\manualfootnote (\lstinline!42!, \lstinline!true!, \lstinline!nullptr!)
+    \item
+      Function call or an overloaded operator expression whose return type is non-reference (\lstinline!str.substr(1, 2)!, \lstinline!it++!)
+    \item
+      Builtin post-increment and post-decrement expressions (\lstinline!i++!)
+    \item
+      Builtin arithmetic expressions (\lstinline!a + b!, \lstinline!a / b!, \lstinline!a & b!, \lstinline!a << b!, \lstinline!-a!)
+    \item
+      Builtin logical expressions (\lstinline!a && b!, \lstinline!a || b!, \lstinline|!a|)
+    \item
+      Builtin comparison expressions (\lstinline!a < b!, \lstinline!a == b!)
+    \item
+      Builtin address-of expression (\lstinline!&a!)
+    \item
+      The \lstinline!this! pointer
+    \item
+      Enumerator
+    \item
+      Lambda expression (\lstinline![](int x){ return x * x; }!)
+    \end{itemize}
+
+    \raggedleft
+    \footnotesize
+    \manualfootnote with exceptions
+  \end{examples}
+\end{frame}
+
+\begin{frame}{Examples of xvalues}{}
+  \begin{examples}[xvalue expressions]
+    \begin{itemize}
+    \item
+      Function call or an overloaded operator expression, whose return type is rvalue reference to object (\lstinline!std::move(x)!)
+    \end{itemize}
+  \end{examples}
+\end{frame}
+
 
 \subsubsection{References}
-
 
 \subsubsection{Exceptions}
 
@@ -360,5 +582,7 @@
 
 
 \subsection{Standard Library}
+
+\subsubsection{Memory allocation}
 
 %  new/delete -> make_unique, make_shared, vector, etc.
