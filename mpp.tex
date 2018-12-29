@@ -24,6 +24,7 @@
 \usepackage{tikz}
 \usepackage{xspace}
 
+\definecolor{version}{rgb}{1,0.5,0}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
 \definecolor{darkblue}{rgb}{0,0,0.5}
 
@@ -56,13 +57,21 @@ keywordstyle=\bfseries\color{darkgreen}
   \end{frame}
 }
 
+\AtBeginSubsubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection,subsubsectionstyle=show/shaded/hide/hide]
+  \end{frame}
+}
+
 \newcommand{\strong}[1]{\textbf{#1}}
 \newcommand{\manualfootnote}{$^*$}
-\newcommand{\sourceinput}[1]{\vspace{-1ex}\lstinputlisting{#1}\vspace{-1ex}}
+\newcommand{\sourceinput}[1]{\vspace{-1.5ex}\lstinputlisting{#1}\vspace{-1.5ex}}
 
 \newcommand{\CCLang}{C\texttt{++}\xspace}
 \newcommand{\CC}[1]{C\texttt{++}#1\xspace}
-\newcommand{\Since}[1]{$^{\text{\bfseries\textcolor{darkgreen}{[C\texttt{++}#1]}}}$}
+\newcommand{\Since}[1]{$^{\text{\bfseries\textcolor{version}{[C\texttt{++}#1]}}}$}
 
 \begin{document}
 

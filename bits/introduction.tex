@@ -65,8 +65,6 @@
   \end{block}
 \end{frame}
 
-\section{Presentation of \CCLang}
-
 \subsection{\CCLang Origins}
 
 % Source: "Evolving a language in and for the real world: 1991-2006", Bjarne Stroustrup
@@ -334,26 +332,31 @@
 \end{frame}
 
 
-\section{Basics of \CCLang}
+\section{Expressions and declaration in \CCLang}
 
-\subsection{Language}
+% \subsection{Language}
+%
+% \begin{frame}{The \CCLang language}{}
+%   \begin{block}{What's in this section?}
+%     \begin{itemize}
+%     \item
+%       Any interesting aspects that are not specific to a programming paradigm
+%     \item
+%       Everything needed for a deep understanding of \CCLang
+%     \end{itemize}
+%   \end{block}
+%
+%   \begin{block}{What's \strong{not} in this section?}
+%     Basic programming constructs that are present in other programming languages
+%     \begin{itemize}
+%     \item
+%       Control flow statements: \lstinline!if!,  \lstinline!for!,  \lstinline!while!,  \lstinline!switch!, \ldots
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
 
-\begin{frame}{The \CCLang language}{}
-  \begin{block}{What's in this section?}
-    Any interesting aspects that are not specific to a programming paradigm
-  \end{block}
 
-  \begin{block}{What's \strong{not} in this section?}
-    Basic programming constructs that are present in other programming languages
-    \begin{itemize}
-    \item
-      Control flow statements: \lstinline!if!,  \lstinline!for!,  \lstinline!while!,  \lstinline!switch!, \ldots
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-
-\subsubsection{Value categories}
+\subsection{Value categories}
 
 \begin{frame}{Expressions}{}
   \begin{block}{Expressions}
@@ -462,9 +465,11 @@
     \item
       Can not be used as the left-hand of the built-in assignment operator
     \item
-      May be used to initialize a const lvalue reference
-    \item
-      May be used to initialize an rvalue reference
+      May be used to initialize a const lvalue reference or an rvalue reference
+      \begin{itemize}
+      \item[$\to$]
+        In that case, the lifetime of the object identified by the rvalue is extended until the scope of the reference ends
+      \end{itemize}
     \end{itemize}
   \end{block}
 \end{frame}
@@ -560,14 +565,209 @@
     \begin{itemize}
     \item
       Function call or an overloaded operator expression, whose return type is rvalue reference to object (\lstinline!std::move(x)!)
+    \item
+      Expression that designates a temporary object
     \end{itemize}
   \end{examples}
 \end{frame}
 
 
-\subsubsection{References}
+\subsection{References}
 
-\subsubsection{Exceptions}
+\begin{frame}{References}{}
+  \begin{definitions}[References]
+    A \strong{reference} of type~\lstinline!T! is an alias to an already existing object or function of type~\lstinline!T!. There are two types of references.
+    \begin{itemize}
+    \item
+      A \strong{lvalue reference}, noted \lstinline!T&!, can be used to:
+      \begin{itemize}
+      \item
+        Alias an lvalue
+      \item
+        Implement pass-by-reference semantics in function calls
+      \item
+        Be the return type of a function, the function call is an lvalue expression
+      \end{itemize}
+    \item
+      A \strong{rvalue references}, noted \lstinline!T&&!, can be used to:
+      \begin{itemize}
+      \item
+        Extend the lifetime of a temporary object
+      \item
+        Create overloads for rvalue expressions
+      \end{itemize}
+    \end{itemize}
+  \end{definitions}
+\end{frame}
+
+\begin{frame}{Limits of references}{}
+  \begin{block}{Limits of references}
+    \begin{itemize}
+    \item
+      There are no references to void
+    \item
+      A reference is required to be initialized to refer to a valid object or function
+      \begin{itemize}
+      \item[$\to$]
+        A null reference can not exist
+      \end{itemize}
+    \item
+      References are not objects (they do not necessarily require storage)
+      \begin{itemize}
+      \item[$\to$]
+        There are no references to references
+      \item[$\to$]
+        There are no arrays of references
+      \item[$\to$]
+        There are no pointers to references
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Reference initialization}{}
+  \begin{block}{Reference initialization}
+    References are initialized in the following situations:
+    \begin{itemize}
+    \item
+      Variable declarations:
+      \begin{itemize}
+      \item
+        Declaration of a named lvalue reference variable with an initializer
+      \item
+        Declaration of a named rvalue reference variable with an initializer
+      \end{itemize}
+    \item
+      Functions (see part~\ref{part:proc}):
+      \begin{itemize}
+      \item
+        Function call expression, when the function parameter has reference type
+      \item
+        Return statement, when the function returns a reference type
+      \end{itemize}
+    \item
+      Objects (see part~\ref{part:oop}):
+      \begin{itemize}
+      \item
+         Initialization of a non-static data member of reference type using a member initializer
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Examples of references}{}
+  \begin{examples}[References]
+    \small
+    \sourceinput{snippets/references.cc}
+  \end{examples}
+\end{frame}
+
+% std::move / std::forward
+
+\subsection{Type detection}
+
+\begin{frame}{Automatic type detection}{}
+  \begin{block}{Automatic type detection in \CC{11} and \CC{14}}
+    \lstinline!auto! can be used to automatically detect a type in the following situations.
+    \begin{itemize}
+    \item
+      Variable declaration: the type is determined from the initializer \\
+      \lstinline!auto x = 1 + 2;! $\to$ \lstinline!int!
+    \item
+      Function declaration: the type is the trailing return type \\
+      \lstinline!auto func(int x) -> int;! $\to$ \lstinline!int!
+    \item
+      Function declaration: the type is deduced from its return statement\Since{14} \\
+      \lstinline!auto add(int x, double y) \{ return x + y; \}! $\to$ \lstinline!double!
+    \item
+      Variable declaration with \lstinline!decltype(auto)!: the type is deduced from the initializing expression using the rules for \lstinline!decltype!\Since{14}
+    \item
+      Function declaration with \lstinline!decltype(auto)!: the type is deduced from the return statement using the rules for \lstinline!decltype!\Since{14}
+    \item
+      Parameter declaration in a lambda expression (generic lambda)\Since{14} \\
+      \lstinline![](auto x) \{ return x + 1; \}!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Automatic type detection}{}
+  \begin{block}{Automatic type detection in \CC{17} and \CC{20}}
+    \lstinline!auto! can be used to automatically detect a type in the following situations.
+    \begin{itemize}
+    \item
+      Template parameter: the type is deduced from the argument\Since{17} \\
+      \lstinline!template<auto Param> class C \{ \};!
+    \item
+      Structure binding declaration\Since{17} \\
+      \lstinline!auto [it, inserted] = dict.insert("Hello");!
+    \item
+      Function parameter declaration\Since{20} \\
+      \lstinline!int sign(auto x) \{ return (x > 0) - (x < 0); \}!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Type of an entity or expression}{}
+  \begin{block}{Type of an entity}
+    \lstinline!decltype! can be used to inspect the type of an entity:
+    \begin{itemize}
+    \item
+      unparenthesized identifier
+    \item
+      unparenthesized class member access expression
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Type of an expression}
+    \lstinline!decltype! can be used to inspect the type of an expression of type \lstinline!T!:
+    \begin{itemize}
+    \item
+      if the expression is an xvalue, then \lstinline!decltype! yields \lstinline!T&&!
+    \item
+      if the expression is an lvalue, then \lstinline!decltype! yields \lstinline!T&!
+    \item
+      if the expression is an prvalue, then \lstinline!decltype! yields \lstinline!T!
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Warning!}
+    For an identifier \lstinline!x!, \lstinline!decltype(x)! and \lstinline!decltype((x))! are often different types.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Type of an entity or expression}{}
+  \begin{example}[Type of an entity or expression]
+    \sourceinput{snippets/decltype.cc}
+  \end{example}
+\end{frame}
+
+% https://herbsutter.com/2013/08/12/gotw-94-solution-aaa-style-almost-always-auto/
+
+\begin{frame}{When to use automatic type detection?}{Two schools}
+  \begin{block}{School \#1: Only when necessary and/or convenient}
+    \begin{itemize}
+    \item
+      When the type has no name (e.g. lambda) \\
+      \lstinline!auto f = [](int x) \{ return x + 1; \};!
+    \item
+      When the type is too long (e.g. iterator types) \\
+      \lstinline!auto it = dict.find("Toto");!
+    \item
+      When the type name is redundant with its initializer \\
+      \lstinline!auto ptr = std::make_unique<Foo>();!
+    \end{itemize}
+  \end{block}
+  \begin{block}{School \#2: Almost Always Auto}
+    Some people advocate for "Almost Always Auto" (AAA), even for simple types
+    (e.g. \lstinline!auto i = std::size_t\{0\};! instead of \lstinline!std::size_t i = 0;!)
+  \end{block}
+  $\to$ Do as you want: be consistent, write readable and maintainable code
+\end{frame}
+
+\section{Standard Library}
+
+\subsection{Exceptions}
 
 % exception
 %   http://www.drdobbs.com/when-and-how-to-use-exceptions/184401836
@@ -581,8 +781,7 @@
 % ODR
 
 
-\subsection{Standard Library}
 
-\subsubsection{Memory allocation}
+\subsection{Memory allocation}
 
 %  new/delete -> make_unique, make_shared, vector, etc.
