@@ -775,6 +775,79 @@
   $\to$ Do as you want: be consistent, write readable and maintainable code
 \end{frame}
 
+
+\subsection{Namespaces}
+
+\begin{frame}{Namespace}{}
+  \begin{definition}[Namespace]
+  A \strong{namespace} is a named declarative region. The name of the namespace can be used to access the entities declared in that namespace.
+  \end{definition}
+
+  \begin{block}{Remarks}
+    \begin{itemize}
+    \item
+      Multiple namespace blocks with the same name are allowed.
+    \item
+      The standard library lives in the \lstinline!std! namespace.
+%     \item
+%       Names not in a namespace are in the global namespace
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[Namespace]
+    \sourceinput{snippets/namespace.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Inline namespace}{}
+  \begin{definition}[Inline namespace]
+    An \strong{inline namespace} is a namespace whose members are treated as if they were members of the enclosing namespace.
+  \end{definition}
+
+  \begin{example}[Inline namespace]
+    \sourceinput{snippets/namespace_inline.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Inline namespace and versioning}{}
+  \begin{block}{Versioning}
+    Inline namespaces are useful for library versioning.
+    \begin{enumerate}
+    \item
+      Put your declarations in an inline namespace \lstinline!v1!
+    \item
+      In case of ABI breakage, put the old declaration in a non-inline namespace \lstinline!v1! and the new declaration in an inline namespace \lstinline!v2! (and so on)
+      \begin{itemize}
+      \item
+        The old declaration is still accessible for old users (no need to recompile)
+      \item
+        The new declaration is the default for new users
+      \end{itemize}
+    \end{enumerate}
+  \end{block}
+  \begin{example}[Inline namespace and versioning]
+    \sourceinput{snippets/namespace_versioning.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Unnamed namespace}{}
+  \begin{definition}[Unnamed namespace]
+    An \strong{unnamed namespace} is a namespace that has no visible name. It is treated as if it was declared with a unique name and its declarations put in the enclosing namespace.
+    % TODO: talk about using namespace before? would simplify the definition here
+  \end{definition}
+  \begin{block}{Important remarks}
+    \begin{itemize}
+    \item
+      Any name declared within an unnamed namespace has internal linkage. % (similar to \lstinline!static!)
+    \item
+      The generated name is unique to the translation unit.
+    \end{itemize}
+  \end{block}
+  \begin{example}[Unnamed namespace]
+    \sourceinput{snippets/namespace_unnamed.cc}
+  \end{example}
+\end{frame}
+
 \section{Standard Library}
 
 \subsection{Exception handling}
