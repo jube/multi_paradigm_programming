@@ -4,6 +4,12 @@
 
 \subsection{About this course}
 
+\begin{frame}{Hello World}{}
+  \begin{center}
+    \sourceinput{snippets/hello.cc}
+  \end{center}
+\end{frame}
+
 \begin{frame}{Objective}{}
   \begin{block}{Objective}
     Learn how to use different paradigms in a single application with modern \CCLang
@@ -293,6 +299,8 @@
       Functors and lambda functions\Since{11} (closures)
     \item
       \lstinline!std::function!\Since{11}
+    \item
+      Partial evaluation (\lstinline!std::bind!)
     \end{itemize}
   \end{block}
 \end{frame}
@@ -333,28 +341,6 @@
 
 
 \section{Expressions and declaration in \CCLang}
-
-% \subsection{Language}
-%
-% \begin{frame}{The \CCLang language}{}
-%   \begin{block}{What's in this section?}
-%     \begin{itemize}
-%     \item
-%       Any interesting aspects that are not specific to a programming paradigm
-%     \item
-%       Everything needed for a deep understanding of \CCLang
-%     \end{itemize}
-%   \end{block}
-%
-%   \begin{block}{What's \strong{not} in this section?}
-%     Basic programming constructs that are present in other programming languages
-%     \begin{itemize}
-%     \item
-%       Control flow statements: \lstinline!if!,  \lstinline!for!,  \lstinline!while!,  \lstinline!switch!, \ldots
-%     \end{itemize}
-%   \end{block}
-% \end{frame}
-
 
 \subsection{Value categories}
 
@@ -434,7 +420,7 @@
       \item
         initializes an object or a bit-field (has a result object)
       \item[$\to$]
-        \emph{prvalues performs initialization}
+        \emph{prvalues perform initialization}
       \end{itemize}
     \item
       An \strong{xvalue} (eXpiring value) is a glvalue that denotes an object or bit-field whose resources can be reused (usually near the end of its lifetime)
@@ -571,6 +557,30 @@
   \end{examples}
 \end{frame}
 
+\begin{frame}{Determination of the value category}{}
+  \begin{block}{lvalue or rvalue?}
+    \begin{enumerate}
+    \item
+      Determine if the expression is a glvalue or a prvalue
+      \begin{itemize}
+      \item
+        glvalues produce locations
+      \item
+        prvalues perform initialization
+      \end{itemize}
+    \item
+      If glvalue, determine if the expression is a temporary object or not
+      \begin{itemize}
+      \item
+        Temporary objects are xvalues
+      \item
+        Non-temporary objects are lvalues
+      \end{itemize}
+    \item[$\to$]
+      prvalues and xvalues are rvalues, everything else is an lvalue
+    \end{enumerate}
+  \end{block}
+\end{frame}
 
 \subsection{References}
 
