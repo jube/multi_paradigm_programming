@@ -767,15 +767,85 @@
 
 \section{Standard Library}
 
-\subsection{Exceptions}
+\subsection{Exception handling}
 
-% exception
-%   http://www.drdobbs.com/when-and-how-to-use-exceptions/184401836
-%   exception safety
+\begin{frame}{Exception handling}{}
+  \begin{definition}[Exception handling]
+    \strong{Exception handling} provides a way of transferring control and information from some point in the execution of a program to a handler associated with a point previously passed by the execution.
+  \end{definition}
+
+  \begin{block}{What may throw an exception?}
+    \begin{itemize}
+    \item
+      \lstinline!throw! expression in case of error
+    \item
+      \lstinline!dynamic_cast! in case of a bad cast to a reference type
+    \item
+      \lstinline!typeid! if a null pointer is dereferenced
+    \item
+      \lstinline!new! expression and allocator function on failure to allocate memory
+    \item
+      Some standard library functions (e.g. \lstinline!std::vector::at!, \lstinline!std::string::substr!, etc)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% http://www.drdobbs.com/when-and-how-to-use-exceptions/184401836
+
+\begin{frame}{Using exceptions}{}
+  \begin{block}{When to use an exception?}
+    Exceptions are used when no other option for error handling is available:
+    \begin{itemize}
+    \item
+      Failures to meet the postconditions, such as failing to produce a valid return value object (e.g. when the return type is a reference)
+    \item
+      Failures to meet the preconditions of another function that must be called
+    \item
+      Failures to (re)establish a class invariant (for non-private member functions)
+    \end{itemize}
+  \end{block}
+
+  \begin{examples}[Use of exceptions]
+    \begin{itemize}
+    \item
+      When a constructor fails
+    \item
+      When an operator can not produce a result
+    \item
+      When a function has a wide contract and get an unacceptable input
+    \end{itemize}
+  \end{examples}
+\end{frame}
+
+\begin{frame}{Exception safety}{}
+  \begin{block}{Exception guarantee levels}
+    A function may provide some guarantee regarding exceptions, especially if the function throws an exception.
+    \begin{enumerate}
+    \item
+      \strong{Nothrow (or nofail) exception guarantee}: it never throws exceptions.
+      \begin{itemize}
+      \item
+        Nothrow: errors are reported by other means or concealed (e.g. destructors)
+      \item
+        Nofail: the function always succeeds (e.g. swaps, move constructors)
+      \end{itemize}
+    \item
+      \strong{Strong exception guarantee}: the state of the program is rolled back to the state just before the function call (e.g. \lstinline!std::vector::push_back!).
+    \item
+      \strong{Basic exception guarantee}: the program is in a valid state; it may require cleanup, but all invariants are intact.
+    \item
+      \strong{No exception guarantee}: the program may not be in a valid state (resource leaks, memory corruption, or other invariant-destroying errors).
+    \end{enumerate}
+  \end{block}
+\end{frame}
 
 
-%   - namespace
-% auto, decltype
+
+
+% namespaces
+% inline namespace and versioning
+% detail namespace
+
 % east const, const west
 % volatile
 % ODR
