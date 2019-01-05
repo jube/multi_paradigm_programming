@@ -342,6 +342,69 @@
 
 \section{Expressions and declaration in \CCLang}
 
+\subsection{Overview}
+
+\begin{frame}{\CCLang program}{}
+  \begin{definition}[\CCLang program]
+    A \strong{\CCLang program} is a sequence of text files (typically header and source files) that contain declarations. They undergo translation to become an executable program, which is executed when the C++ implementation calls its main function.
+  \end{definition}
+\end{frame}
+
+\begin{frame}{Entities}{}
+  \begin{block}{Entities}
+    The \strong{entities} of a C++ program are:
+    \begin{itemize}
+    \item
+      values
+    \item
+      objects
+    \item
+      references
+    \item
+      structured bindings\Since{17}
+    \item
+      functions
+    \item
+      enumerators
+    \item
+      types
+    \item
+      class members
+    \item
+      templates
+    \item
+      template specializations
+    \item
+      namespaces
+    \item
+      parameter packs.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Objects}{}
+  \begin{definition}[Object]
+    An \strong{object} is a \emph{region of storage} with the following properties:
+    \begin{itemize}
+    \item
+      a size (that can be determined with \lstinline!sizeof!)
+    \item
+      an alignment requirement (that can be determined with \lstinline!alignof!)
+    \item
+      a storage duration (automatic, static, dynamic, thread-local)
+    \item
+      a lifetime
+    \item
+      a type
+    \item
+      a value (which may be indeterminate)
+    \item
+      optionally, a name
+    \end{itemize}
+  \end{definition}
+\end{frame}
+
+
 \subsection{Value categories}
 
 \begin{frame}{Expressions}{}
@@ -848,6 +911,9 @@
   \end{example}
 \end{frame}
 
+% TODO: detail namespace
+
+
 \section{Standard Library}
 
 \subsection{Exception handling}
@@ -923,18 +989,18 @@
 \end{frame}
 
 
-
-
-% namespaces
-% inline namespace and versioning
-% detail namespace
-
-% east const, const west
-% volatile
-% ODR
-
-
-
 \subsection{Memory allocation}
 
 %  new/delete -> make_unique, make_shared, vector, etc.
+
+
+
+% volatile
+% ODR
+
+% range based for
+% if/while with init
+% constexpr if
+
+
+% API/ABI
