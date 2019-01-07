@@ -1,21 +1,321 @@
 \part{Procedural programming}
 \label{part:proc}
 
-% const
-% reference
-% range based for
-% constexpr
+\section{Procedural programming}
 
-% overloading
-% default parameters
-% - operator
-% http://en.cppreference.com/w/cpp/language/adl
+% definition and declaration
 
-% parameter passing
+\subsection{Arguments}
+
+\subsubsection{Default arguments}
+
+\begin{frame}{Default arguments}{}
+  \begin{definition}[Default arguments]
+    \strong{Default arguments} are used in calls where \emph{trailing} arguments are missing.
+  \end{definition}
+
+  \begin{example}[Default arguments]
+    \sourceinput{snippets/default_arguments.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Variadic arguments}
+
+\begin{frame}{Variadic arguments}{}
+  \begin{definition}[Variadic arguments]
+    \strong{Variadic arguments} are used when a function accepts any number of arguments. They are indicated by a parameter of the form \lstinline!...! (ellipsis) that must appear last in the parameter list of the function declaration.
+  \end{definition}
+
+  \begin{block}{Remarks}
+    \begin{itemize}
+    \item
+      The ellipsis can be noted \lstinline!...! (\CCLang style) or \lstinline!, ...! (C style)
+      \smallskip
+      \sourceinput{snippets/ellipsis.cc}
+    \item
+      To be able to access the arguments, the function must have at least one named paramter before the ellipsis
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Accessing variadic arguments}{}
+  \begin{block}{Accessing variadic arguments}
+    The \lstinline!<cstdarg>! header provides facilities for accessing the variadic arguments:
+    \begin{itemize}
+    \item
+      The \lstinline!va_list! type holds the information for accessing the variadic arguments
+    \item
+      The \lstinline!va_start! macro enables access to the variable arguments
+    \item
+      The \lstinline!va_arg! macro accesses the next variadic function argument
+    \item
+      The \lstinline!va_end! macro ends traversal of the variadic function arguments
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Default argument promotions}
+    \begin{itemize}
+    \item
+      \lstinline!nullptr_t! is converted to \lstinline!void*!
+    \item
+      \lstinline!float! is converted to \lstinline!double!
+    \item
+      \lstinline!bool!, \lstinline!char!, \lstinline!short! are converted to \lstinline!int!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Example of variadic arguments}{}
+  \begin{example}
+    \sourceinput{snippets/variadic_arguments.cc}
+  \end{example}
+\end{frame}
+
+\subsection{Overloading}
+
+\subsubsection{Function overloading}
+
+\begin{frame}{Function overloading}{}
+  \begin{definition}[Function overloading]
+    \strong{Function overloading} is the ability to create multiple functions with the same name with different implementations. Two overloaded function must differ by the type of their parameters.
+  \end{definition}
+
+  \begin{block}{Overload resolution}
+    When a function is overloaded, overload resolution is the process to select the function that will be called.
+    \begin{itemize}
+    \item
+      Determination of the set of candidate functions after name lookup and template argument deduction
+    \item
+      Determination of the set of viable functions after examining arguments and parameters
+    \item
+      Choice of the best viable function
+    \end{itemize}
+    Overload resolution may fail and result in a compilation error.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Function overloading}{}
+  \begin{example}[Function overloading]
+    \sourceinput{snippets/overload.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Operator overloading}
+
+\begin{frame}{Operator overloading}{}
+  \begin{block}{Operator overloading}
+    Operator overloading is a special case of function overloading. Operators that can be overloaded are:
+    \begin{itemize}
+    \item
+      Arithmetic operators: \lstinline!+!, \lstinline!-!, \lstinline!*!, \lstinline!/!, \lstinline!\%!, \lstinline!\^!, \lstinline!\&!, \lstinline!|!, \lstinline!\~!, \lstinline!<<!, \lstinline!>>!
+    \item
+      Increment and decrement operators: \lstinline!++!, \lstinline!--!
+    \item
+      Logical operators: \lstinline+!+, \lstinline!&&!, \lstinline!||!
+    \item
+      Assignment operators: \lstinline!=!, \lstinline!+=!, \lstinline!-=!, \lstinline!*=!, \lstinline!/=!, \lstinline!\%=!, \lstinline!\^=!, \lstinline!\&=!, \lstinline!|=!, \lstinline!<<=!, \lstinline!>>=!
+    \item
+      Comparisons operators: \lstinline!==!, \lstinline+!=+, \lstinline!<!, \lstinline!>!, \lstinline!<=!, \lstinline!>=!, \lstinline!<=>!\Since{20}
+    \item
+      Access operators: \lstinline!->!, \lstinline!->*!, \lstinline![]!
+    \item
+      Special operators: \lstinline!,! (comma), \lstinline!()! (call)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Overloaded operators}{}
+  \begin{block}{Overloaded operators}
+    \begin{center}
+      \scriptsize
+      \begin{tabular}{|c|c|c|l|}
+        \hline
+        Expression & Member function & Free function & Example \\
+        \hline
+        \lstinline!@a! & \lstinline!(a).operator@()! & \lstinline!operator@(a)! & \lstinline+!std::cin+ \\
+                      &                             &                          & $\to$ \lstinline+std::cin.operator!()+ \\
+        \hline
+        \lstinline!a @ b! & \lstinline!(a).operator@(b)! & \lstinline!operator@(a,b)! & \lstinline!std::cout << 42! \\
+                          &                              &                            & $\to$ \lstinline!std::cout.operator<<(42)! \\
+        \hline
+        \lstinline!a = b! & \lstinline!(a).operator=(b)! &                            & \lstinline!std::string s; s = "abc";! \\
+                          &                              &                            & $\to$ \lstinline!std::string.operator=("abc")! \\
+        \hline
+        \lstinline!a(b)! & \lstinline!(a).operator()(b)! &                            & \lstinline!std::random_device r; auto n = r();! \\
+                        &                               &                            & $\to$ \lstinline!r.operator()()! \\
+        \hline
+        \lstinline!a[b]! & \lstinline!(a).operator[](b)! &                            & \lstinline!std::map<int, int> m; m[1] = 2;! \\
+                        &                               &                            & $\to$ \lstinline!m.operator[](1)! \\
+        \hline
+        \lstinline!a->!  & \lstinline!(a).operator->()!  &                            & \lstinline!auto p = std::make_unique<S>(); p->bar()! \\
+                        &                               &                            & $\to$ \lstinline!p.operator->()! \\
+        \hline
+        \lstinline!a@!   & \lstinline!(a).operator@(0)!  & \lstinline!operator@(a,0)! & \lstinline!auto i = v.begin(); i++! \\
+                        &                               &                            & $\to$ \lstinline!i.operator++(0)! \\
+        \hline
+      \end{tabular}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Restrictions on overloaded operators}{}
+  \begin{block}{Restrictions on overloaded operators}
+    \begin{itemize}
+    \item
+      The following operators can \strong{not} be overloaded:
+      \begin{itemize}
+      \item
+        \lstinline!::! (scope resolution)
+      \item
+        \lstinline!.! (member access)
+      \item
+        \lstinline!.*! (member access through pointer to member)
+      \item
+        \lstinline!?:! (ternary conditional)
+      \end{itemize}
+    \item
+      New operators such as \lstinline!**!, \lstinline!<>!, or \lstinline!&|! can \strong{not} be created
+    \item
+      The overloads of operators \lstinline!&&! and \lstinline!||! lose short-circuit evaluation
+    \item
+      The overload of operator \lstinline!->! must either return a raw pointer, or return an object (by reference or by value) for which operator \lstinline!->! is in turn overloaded
+    \item
+      It is \strong{not} possible to change:
+      \begin{itemize}
+      \item
+        the precedence of operators
+      \item
+        the grouping of operators
+      \item
+        the number of operands of operators
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Operator overloading}{}
+  \begin{example}[Operator overloading]
+    \sourceinput{snippets/overload_operator.cc}
+  \end{example}
+\end{frame}
+
+\subsection{Parameter passing}
+
 % https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rf-conventional
+
+\begin{frame}{Properties of types}{}
+  \begin{block}{Properties of types}
+    Types may be of three kinds regarding their ease of use in functions:
+    \begin{enumerate}
+    \item
+      Easy types:
+      \begin{itemize}
+      \item
+        Cheap to copy: \lstinline!int! and all fundamental types, \lstinline!std::tuple<bool, int*>!, \ldots
+      \item
+        Impossible to copy: \lstinline!std::unique_ptr<T>!, \ldots
+      \end{itemize}
+    \item
+      Medium types:
+      \begin{itemize}
+      \item
+        Cheap to move: \lstinline!std::string!, \lstinline!std::vector<T>!, \ldots
+      \item
+        Quite cheap to move: \lstinline!BigData!, \lstinline!std::array<std::vector<T>,N>!, \ldots
+      \item
+        Unknown cost: \lstinline!unknown::Type!, \ldots
+      \end{itemize}
+    \item
+      Hard types:
+      \begin{itemize}
+      \item
+        Expensive to move: \lstinline!std::array<BigData,N>!, \ldots
+      \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Output only values}{}
+  \begin{block}{Output only values}
+    For output only values, prefer:
+    \begin{itemize}
+    \item
+      Return values for easy and medium types \\
+      \lstinline!X f();!
+%       \begin{itemize}
+%       \item
+%         In case of multiple return values, use a \lstinline!struct! or \lstinline!std::tuple! \\
+%         \lstinline!std::tuple<X,Y> f();!
+%       \end{itemize}
+    \item
+      Output parameter (reference to non-const) for hard types \\
+      \lstinline!void f(X& out);!
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[Output only values]
+    \sourceinput{snippets/parameter_passing_out.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Input only values}{}
+  \begin{block}{Input only values}
+    For input only values, prefer:
+    \begin{itemize}
+    \item
+      Passing by value for easy types \\
+      \lstinline!void f(T in);!
+    \item
+      Passing by const reference for medium and hard types
+      \lstinline!void f(const T& in);!
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[Input only values]
+    \sourceinput{snippets/parameter_passing_in.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Input/Output values}{}
+  \begin{block}{Input/Output values}
+    For input/output values, prefer:
+    \begin{itemize}
+    \item
+      Passing by reference to non-const for any type \\
+      \lstinline!void f(T& inout);!
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[Input/Output values]
+    \sourceinput{snippets/parameter_passing_inout.cc}
+  \end{example}
+\end{frame}
+
 % parameter passing and reference
 
-% ABI
+
+\subsection{Argument-dependent lookup}
+
+% http://en.cppreference.com/w/cpp/language/adl
+
+\subsection{Constant expression functions}
+
+% constexpr
+
+% UDL
+% string ids
+
 % mangling
 
 % copy elision
+
+
+% \begin{frame}{}{}
+%   \begin{block}{}
+%     \begin{itemize}
+%     \item
+%     \item
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
