@@ -7,10 +7,19 @@
 \begin{frame}{Hello World}{}
   \begin{center}
     \sourceinput{snippets/hello.cc}
+
+    \bigskip
+
+    \begin{quote}
+      "There are only two kinds of languages: the ones people complain about and the ones nobody uses."
+      \begin{flushright}
+        \upshape Bjarne Stroustrup, creator of \CCLang
+      \end{flushright}
+    \end{quote}
   \end{center}
 \end{frame}
 
-\begin{frame}{Objective}{}
+\begin{frame}{Objective and scope}{}
   \begin{block}{Objective}
     Learn how to use different paradigms in a single application with modern \CCLang
 
@@ -23,6 +32,17 @@
       functional programming
     \item
       generic programming
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Scope}
+    \begin{itemize}
+    \item
+      \strong{Not} the basics of programming and/or the basics of \CCLang
+    \item
+      The elements to understand how \CCLang works
+    \item
+      The idioms and good practices of \CCLang
     \end{itemize}
   \end{block}
 \end{frame}
@@ -340,7 +360,7 @@
 \end{frame}
 
 
-\section{Expressions and declaration in \CCLang}
+\section{Expressions, declarations and statements in \CCLang}
 
 \subsection{Overview}
 
@@ -540,7 +560,7 @@
     \item
       Can not be polymorphic
     \item
-      If non-class and non-array, can not cv-qualified
+      If non-class and non-array, can not be cv-qualified
     \item
       Can not have incomplete type
     \item
@@ -711,7 +731,7 @@
         Declaration of a named rvalue reference variable with an initializer
       \end{itemize}
     \item
-      Functions (see part~\ref{part:proc}):
+      Functions (see part~2; % TODO: ~\ref{part:proc}):
       \begin{itemize}
       \item
         Function call expression, when the function parameter has reference type
@@ -719,7 +739,7 @@
         Return statement, when the function returns a reference type
       \end{itemize}
     \item
-      Objects (see part~\ref{part:oop}):
+      Objects (see part~3; % TODO: \ref{part:oop}):
       \begin{itemize}
       \item
          Initialization of a non-static data member of reference type using a member initializer
@@ -737,106 +757,6 @@
 \end{frame}
 
 % std::move / std::forward
-
-\subsection{Type detection}
-
-\begin{frame}{Automatic type detection}{}
-  \begin{block}{Automatic type detection in \CC{11} and \CC{14}}
-    \lstinline!auto! can be used to automatically detect a type in the following situations.
-    \begin{itemize}
-    \item
-      Variable declaration: the type is determined from the initializer \\
-      \lstinline!auto x = 1 + 2;! $\to$ \lstinline!int!
-    \item
-      Function declaration: the type is the trailing return type \\
-      \lstinline!auto func(int x) -> int;! $\to$ \lstinline!int!
-    \item
-      Function declaration: the type is deduced from its return statement\Since{14} \\
-      \lstinline!auto add(int x, double y) \{ return x + y; \}! $\to$ \lstinline!double!
-    \item
-      Variable declaration with \lstinline!decltype(auto)!: the type is deduced from the initializing expression using the rules for \lstinline!decltype!\Since{14}
-    \item
-      Function declaration with \lstinline!decltype(auto)!: the type is deduced from the return statement using the rules for \lstinline!decltype!\Since{14}
-    \item
-      Parameter declaration in a lambda expression (generic lambda)\Since{14} \\
-      \lstinline![](auto x) \{ return x + 1; \}!
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}{Automatic type detection}{}
-  \begin{block}{Automatic type detection in \CC{17} and \CC{20}}
-    \lstinline!auto! can be used to automatically detect a type in the following situations.
-    \begin{itemize}
-    \item
-      Template parameter: the type is deduced from the argument\Since{17} \\
-      \lstinline!template<auto Param> class C \{ \};!
-    \item
-      Structure binding declaration\Since{17} \\
-      \lstinline!auto [it, inserted] = dict.insert("Hello");!
-    \item
-      Function parameter declaration\Since{20} \\
-      \lstinline!int sign(auto x) \{ return (x > 0) - (x < 0); \}!
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}{Type of an entity or expression}{}
-  \begin{block}{Type of an entity}
-    \lstinline!decltype! can be used to inspect the type of an entity:
-    \begin{itemize}
-    \item
-      unparenthesized identifier
-    \item
-      unparenthesized class member access expression
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Type of an expression}
-    \lstinline!decltype! can be used to inspect the type of an expression of type \lstinline!T!:
-    \begin{itemize}
-    \item
-      if the expression is an xvalue, then \lstinline!decltype! yields \lstinline!T&&!
-    \item
-      if the expression is an lvalue, then \lstinline!decltype! yields \lstinline!T&!
-    \item
-      if the expression is an prvalue, then \lstinline!decltype! yields \lstinline!T!
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Warning!}
-    For an identifier \lstinline!x!, \lstinline!decltype(x)! and \lstinline!decltype((x))! are often different types.
-  \end{block}
-\end{frame}
-
-\begin{frame}{Type of an entity or expression}{}
-  \begin{example}[Type of an entity or expression]
-    \sourceinput{snippets/decltype.cc}
-  \end{example}
-\end{frame}
-
-% https://herbsutter.com/2013/08/12/gotw-94-solution-aaa-style-almost-always-auto/
-
-\begin{frame}{When to use automatic type detection?}{Two schools}
-  \begin{block}{School \#1: Only when necessary and/or convenient}
-    \begin{itemize}
-    \item
-      When the type has no name (e.g. lambda) \\
-      \lstinline!auto f = [](int x) \{ return x + 1; \};!
-    \item
-      When the type is too long (e.g. iterator types) \\
-      \lstinline!auto it = dict.find("Toto");!
-    \item
-      When the type name is redundant with its initializer \\
-      \lstinline!auto ptr = std::make_unique<Foo>();!
-    \end{itemize}
-  \end{block}
-  \begin{block}{School \#2: Almost Always Auto}
-    Some people advocate for "Almost Always Auto" (AAA), even for simple types
-    (e.g. \lstinline!auto i = std::size_t\{0\};! instead of \lstinline!std::size_t i = 0;!)
-  \end{block}
-  $\to$ Do as you want: be consistent, write readable and maintainable code
-\end{frame}
 
 
 \subsection{Namespaces}
@@ -912,9 +832,6 @@
 \end{frame}
 
 % TODO: detail namespace
-
-
-\section{Standard Library}
 
 \subsection{Exception handling}
 
@@ -994,13 +911,103 @@
 %  new/delete -> make_unique, make_shared, vector, etc.
 
 
+\subsection{Improved control flow}
+
+\subsubsection{Range-based \texttt{for} loop}
+
+\begin{frame}{Range-based \texttt{for} loop}{}
+  \begin{block}{Range-based \texttt{for} loop}
+    {
+      \hfill\lstinline[mathescape]!for ( $decl$ : $range$ ) $loop$!\hfill
+    }
+
+    is equivalent to\only<2>{\Since{17}}:
+
+    \smaller
+    \only<1>{\lstinputlisting[mathescape]{snippets/range-based_for_11.cc}}
+    \only<2>{\lstinputlisting[mathescape]{snippets/range-based_for_17.cc}}
+
+    \begin{itemize}
+    \item
+      If $range$ is an array, $b$ is \lstinline[mathescape]!$range$! and $e$ is \lstinline[mathescape]!$range$ + $bound$!
+    \item
+      If $range$ is a class with \lstinline!begin! and \lstinline!end! members, $b$ is \lstinline[mathescape]!$range$.begin()!, $e$ is \lstinline[mathescape]!$range$.end()!
+    \item
+      Otherwise, $b$ is \lstinline[mathescape]!begin($range$)! and $e$ is \lstinline[mathescape]!end($range$)!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Range-based \texttt{for} loop with initialization\Since{20}}{}
+  \begin{block}{Range-based \texttt{for} loop with initialization}
+    {
+      \hfill\lstinline[mathescape]!for ( $init$ ; $decl$ : $range$ ) $loop$!\hfill
+    }
+
+    is equivalent to\Since{20}:
+
+    \smaller
+    \only<1>{\lstinputlisting[mathescape]{snippets/range-based_for_20.cc}}
+
+    \begin{itemize}
+    \item
+      If $range$ is an array, $b$ is \lstinline[mathescape]!$range$! and $e$ is \lstinline[mathescape]!$range$ + $bound$!
+    \item
+      If $range$ is a class with \lstinline!begin! and \lstinline!end! members, $b$ is \lstinline[mathescape]!$range$.begin()!, $e$ is \lstinline[mathescape]!$range$.end()!
+    \item
+      Otherwise, $b$ is \lstinline[mathescape]!begin($range$)! and $e$ is \lstinline[mathescape]!end($range$)!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Range-based \texttt{for}}{}
+  \begin{example}[Range-based \texttt{for}]
+    \sourceinput{snippets/range-based_for.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Selection statements with initialization}
+
+\begin{frame}{\texttt{if} statement with initialization\Since{17}}{}
+  \begin{block}{\texttt{if} statement with initialization}
+    {
+      \hfill\lstinline[mathescape]!if ( $init$ ; $cond$ ) $stmt$!\hfill
+    }
+
+    is equivalent to\Since{17}:
+
+    \smaller
+    \lstinputlisting[mathescape]{snippets/if_init.cc}
+  \end{block}
+
+  \begin{example}[\texttt{if} statement with initialization]
+    \sourceinput{snippets/if_init_ex.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{\texttt{switch} statement with initialization\Since{17}}{}
+  \begin{block}{\texttt{switch} statement with initialization}
+    {
+      \hfill\lstinline[mathescape]!switch ( $init$ ; $expr$ ) $stmt$!\hfill
+    }
+
+    is equivalent to\Since{17}:
+
+    \smaller
+    \lstinputlisting[mathescape]{snippets/switch_init.cc}
+  \end{block}
+
+  \begin{example}[\texttt{switch} statement with initialization]
+    \sourceinput{snippets/switch_init_ex.cc}
+  \end{example}
+\end{frame}
+
+
+
+
+
+
 
 % volatile
 % ODR
-
-% range based for
-% if/while with init
-% constexpr if
-
-
 % API/ABI

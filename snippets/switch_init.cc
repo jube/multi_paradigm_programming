@@ -1,0 +1,4 @@
+{
+  $init$
+  switch ( $expr$ ) $stmt$
+}

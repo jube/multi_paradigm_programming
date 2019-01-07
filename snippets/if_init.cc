@@ -1,0 +1,4 @@
+{
+  $init$
+  if ( $cond$ ) $stmt$
+}
