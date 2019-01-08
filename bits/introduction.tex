@@ -665,6 +665,139 @@
   \end{block}
 \end{frame}
 
+
+\subsection{Memory allocation}
+
+\begin{frame}{\texttt{new} expression}{}
+  \begin{block}{\texttt{new} expression}
+    A \lstinline!new! expression allocates and initializes objects with dynamic storage duration.
+
+    {
+      \hfill\lstinline[mathescape]!new $\;type\;$! or \lstinline[mathescape]!new $\;type\;$ $\;initializer\;$!\hfill
+    }
+    \begin{itemize}
+    \item
+      Attempts to allocate storage and then attempts to construct and initialize either a single unnamed object, or an unnamed array of objects in the allocated storage
+    \item
+      Returns a prvalue pointer to the constructed object or, if an array of objects was constructed, a pointer to the initial element of the array
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[\texttt{new} expression]
+    \sourceinput{snippets/new.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Placement \texttt{new} expression}{}
+  \begin{block}{Placement \texttt{new} expression}
+    A placement \lstinline!new! expression is used to construct objects in an already allocated storage
+    {
+      \hfill\lstinline[mathescape]!new ($\;placement\;$) $\;type\;$! or \lstinline[mathescape]!new ($\;placement\;$) $\;type\;$ $\;initializer\;$!\hfill
+    }
+  \end{block}
+
+  \begin{example}[Placement \texttt{new} expression]
+    \sourceinput{snippets/placement_new.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{\texttt{delete} expression}{}
+  \begin{block}{\texttt{delete} expression}
+    A \lstinline!delete! expression destroys the object(s) previously allocated by a \lstinline!new! expression and releases the obtained memory area.
+
+    {
+      \hfill\lstinline[mathescape]!delete $\;expr\;$!\hfill
+    }
+    \begin{itemize}
+    \item
+      Destroys one non-array object created by a new-expression
+    \item
+      \lstinline[mathescape]!$expr$! can be \lstinline!nullptr!
+    \end{itemize}
+    {
+      \hfill\lstinline[mathescape]!delete [] $\;expr\;$!\hfill
+    }
+    \begin{itemize}
+    \item
+      Destroys an array created by a new[]-expression
+    \item
+      \lstinline[mathescape]!$expr$! can be \lstinline!nullptr!
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Remark}
+    Never mix non-array \lstinline!new!/\lstinline!delete! and array \lstinline!new[]!/\lstinline!delete[]!!
+  \end{block}
+\end{frame}
+
+\begin{frame}{Good practice for memory allocation}{}
+  \begin{block}{Good practice for memory allocation}
+    \begin{center}
+      \Large
+      \bfseries
+      Never use \lstinline!new! and \lstinline!delete!!
+    \end{center}
+
+    Use smart pointers according to ownership semantics:
+    \begin{itemize}
+    \item
+      Unique object $\to$ \lstinline!std::unique_ptr<T>! and \lstinline!std::make_unique!\Since{14}
+    \item
+      Shared object $\to$ \lstinline!std::shared_ptr<T>! and \lstinline!std::make_shared!
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[Smart pointers]
+    \sourceinput{snippets/smart_pointers.cc}
+  \end{example}
+\end{frame}
+
+
+%  new/delete -> make_unique, make_shared, vector, etc.
+
+
+\subsection{Scoped enumerations}
+
+\begin{frame}{Scoped enumeration}{}
+  \begin{block}{Scoped enumeration}
+    {
+      \hfill\lstinline[mathescape]!enum class $\;name\;$ \{ $\;enumerators\;$ \}!\hfill
+    }
+
+    \begin{itemize}
+    \item
+      The underlying type is \lstinline!int!
+    \item
+      The enumerators are contained in the scope of the enumeration
+    \item
+      The enumerators can be accessed using scope resolution operator \lstinline!::!
+    \item
+      \lstinline!static_cast! is required to obtain the numeric value of the enumerator
+    \end{itemize}
+
+    {
+      \hfill\lstinline[mathescape]!enum class $\;name\;$ : $\;type\;$ \{ $\;enumerators\;$ \}!\hfill
+    }
+
+    \begin{itemize}
+    \item
+      The underlying type is \lstinline[mathescape]!$type$!
+    \item
+      \lstinline[mathescape]!$type$! is an integral type
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Remark}
+    Always use scoped enumerations!
+  \end{block}
+\end{frame}
+
+\begin{frame}{Scoped enumeration}{}
+  \begin{example}[Scoped enumeration]
+    \sourceinput{snippets/scoped_enum.cc}
+  \end{example}
+\end{frame}
+
 \subsection{References}
 
 \begin{frame}{References}{}
@@ -731,7 +864,7 @@
         Declaration of a named rvalue reference variable with an initializer
       \end{itemize}
     \item
-      Functions (see part~2; % TODO: ~\ref{part:proc}):
+      Functions (see part~2): % TODO: ~\ref{part:proc}):
       \begin{itemize}
       \item
         Function call expression, when the function parameter has reference type
@@ -739,7 +872,7 @@
         Return statement, when the function returns a reference type
       \end{itemize}
     \item
-      Objects (see part~3; % TODO: \ref{part:oop}):
+      Objects (see part~3): % TODO: \ref{part:oop}):
       \begin{itemize}
       \item
          Initialization of a non-static data member of reference type using a member initializer
@@ -904,11 +1037,6 @@
     \end{enumerate}
   \end{block}
 \end{frame}
-
-
-\subsection{Memory allocation}
-
-%  new/delete -> make_unique, make_shared, vector, etc.
 
 
 \subsection{Improved control flow}
