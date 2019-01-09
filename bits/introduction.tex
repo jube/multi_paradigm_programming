@@ -620,7 +620,7 @@
     \item
       Enumerator
     \item
-      Lambda expression (\lstinline![](int x){ return x * x; }!)
+      Lambda expression (\lstinline![](int x) \{ return x * x; \}!)
     \end{itemize}
 
     \raggedleft
@@ -665,6 +665,7 @@
   \end{block}
 \end{frame}
 
+% TODO: example
 
 \subsection{Memory allocation}
 
@@ -691,6 +692,7 @@
 \begin{frame}{Placement \texttt{new} expression}{}
   \begin{block}{Placement \texttt{new} expression}
     A placement \lstinline!new! expression is used to construct objects in an already allocated storage
+
     {
       \hfill\lstinline[mathescape]!new ($\;placement\;$) $\;type\;$! or \lstinline[mathescape]!new ($\;placement\;$) $\;type\;$ $\;initializer\;$!\hfill
     }
@@ -751,9 +753,6 @@
     \sourceinput{snippets/smart_pointers.cc}
   \end{example}
 \end{frame}
-
-
-%  new/delete -> make_unique, make_shared, vector, etc.
 
 
 \subsection{Scoped enumerations}
@@ -881,15 +880,35 @@
   \end{block}
 \end{frame}
 
-
-\begin{frame}{Examples of references}{}
+\begin{frame}{References}{}
   \begin{examples}[References]
     \small
     \sourceinput{snippets/references.cc}
   \end{examples}
 \end{frame}
 
-% std::move / std::forward
+\begin{frame}{\texttt{std::move}}{}
+  \begin{block}{\texttt{std::move}}
+    \lstinline!std::move! is used to \emph{indicate} that an object may be "moved from", i.e. allowing the efficient transfer of resources from an object to another object.
+
+    In particular, \lstinline!std::move! produces an xvalue expression that identifies its argument.
+
+    \begin{itemize}
+    \item
+      A \lstinline!std::move! is equivalent to a \lstinline!static_cast! to an rvalue reference type
+    \item
+      If a function accepts rvalue reference parameters, \lstinline!std::move! can be used to produce an xvalue
+    \item
+      Generally, a moved-from object is in a valid but unspecified state
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{\texttt{std::move}}{}
+  \begin{example}[\texttt{std::move}]
+    \sourceinput{snippets/move.cc}
+  \end{example}
+\end{frame}
 
 
 \subsection{Namespaces}

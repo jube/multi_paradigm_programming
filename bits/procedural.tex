@@ -33,7 +33,7 @@
       \smallskip
       \sourceinput{snippets/ellipsis.cc}
     \item
-      To be able to access the arguments, the function must have at least one named paramter before the ellipsis
+      To be able to access the arguments, the function must have at least one named parameter before the ellipsis
     \end{itemize}
   \end{block}
 \end{frame}
@@ -65,12 +65,12 @@
   \end{block}
 \end{frame}
 
-
 \begin{frame}{Example of variadic arguments}{}
   \begin{example}
     \sourceinput{snippets/variadic_arguments.cc}
   \end{example}
 \end{frame}
+
 
 \subsection{Overloading}
 
@@ -200,6 +200,7 @@
   \end{example}
 \end{frame}
 
+
 \subsection{Parameter passing}
 
 % https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rf-conventional
@@ -292,30 +293,226 @@
   \end{example}
 \end{frame}
 
-% parameter passing and reference
+
+\begin{frame}{Special case: copy of a parameter}{}
+  \begin{block}{Copy of a parameter}
+    In the case a function wants a copy of a parameter of medium type, the function can be overloaded to handle two situations:
+    \begin{itemize}
+    \item
+      \lstinline!void f(const T& in);!
+      \begin{itemize}
+      \item
+        The function will be used for lvalues
+      \item
+        The function will make a deep copy of the argument
+      \end{itemize}
+    \item
+      \lstinline!void f(T&& in);!
+      \begin{itemize}
+      \item
+        The function will be used for rvalues
+      \item
+        The function will move from the argument
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
 
 
 \subsection{Argument-dependent lookup}
 
 % http://en.cppreference.com/w/cpp/language/adl
 
-\subsection{Constant expression functions}
+\begin{frame}{Argument-dependent lookup}{}
+  \begin{definition}[Argument-dependent lookup]
+    \strong{Argument-dependent lookup} (ADL) is the set of rules for looking up the unqualified function names in function-call expressions, including implicit function calls to overloaded operators. These function names are looked up in the namespaces of their arguments in addition to the scopes and namespaces considered by the usual unqualified name lookup.
+  \end{definition}
+\end{frame}
 
-% constexpr
+\begin{frame}{Argument-dependent lookup}{}
+  \begin{example}[Argument-dependent lookup]
+    \sourceinput{snippets/adl.cc}
+  \end{example}
+\end{frame}
 
-% UDL
-% string ids
+
+\subsection{\texttt{constexpr} functions}
+
+\begin{frame}{\texttt{constexpr} functions}{}
+  \begin{block}{\texttt{constexpr} functions}
+    A \lstinline!constexpr! functions must satisfy the following requirements\Since{14}:
+    \begin{itemize}
+    \item
+      Its return type must be a literal type
+    \item
+      Each of its parameter must be a literal type
+    \item
+      The function body must \strong{not} contain:
+      \begin{itemize}
+      \item
+        an \lstinline!asm! declaration
+      \item
+        a \lstinline!goto! statement
+      \item
+        a statement with a label other than \lstinline!case! and \lstinline!default!
+      \item
+        a definition of a variable of non-literal type
+      \item
+        a definition of a variable of static or thread storage duration
+      \item
+        a definition of a variable for which no initialization is performed
+      \end{itemize}
+    \end{itemize}
+
+    A \lstinline!constexpr! function can be used to compute values at compile time.
+  \end{block}
+
+  \begin{block}{Remark}
+    In \CC{11}, a \lstinline!constexpr! function could only have exactly one return statement!
+  \end{block}
+\end{frame}
+
+\begin{frame}{\texttt{constexpr} functions}{}
+  \begin{example}[\texttt{constexpr} functions]
+    \sourceinput{snippets/constexpr_function.cc}
+  \end{example}
+\end{frame}
+
+
+\subsection{User-defined literals}
+
+\begin{frame}{Literal suffix}{}
+  \begin{block}{Literal suffix}
+    A \strong{literal suffix} is appended to a literal to specify a type for the literal:
+    \begin{itemize}
+    \item
+      For integers: \lstinline!u!/\lstinline!U! for \lstinline!unsigned!, \lstinline!l!/\lstinline!L! for \lstinline!long! or \lstinline!ll!/\lstinline!LL! for \lstinline!long long!
+    \item
+      For floats: \lstinline!f!/\lstinline!F! for \lstinline!float!, \lstinline!l!/\lstinline!L! for \lstinline!long double!
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[Literal suffix]
+    \sourceinput{snippets/literal_suffix.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{User-defined literals}{}
+  \begin{block}{User-defined literals}
+    \strong{User-defined literals} are literals with a user-defined suffix. They allow integer, floating-point, character, and string literals to produce objects of user-defined type by defining a user-defined suffix.
+    \begin{itemize}
+    \item
+      The suffix is an identifier
+    \item
+      The suffix introduced by a program must begin with an underscore
+    \item
+      The standard library suffixes do not begin with underscores
+    \end{itemize}
+  \end{block}
+
+  \begin{example}[User-defined literals]
+    \sourceinput{snippets/user-defined_literals.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Literal operator}{}
+  \begin{block}{Literal operator}
+    The function called by a user-defined literal is known as \strong{literal operator}. It is a function like any other with a name of the form:
+
+    {
+      \hfill\lstinline[mathescape]!operator "" $\;id$!\hfill
+    }
+
+    Only the following parameter lists are allowed on literal operators:
+    \begin{itemize}
+    \item
+      \lstinline!(const char *)!
+    \item
+      \lstinline!(unsigned long long int)!
+    \item
+      \lstinline!(long double)!
+    \item
+      \lstinline[mathescape]!($character$)!
+      \begin{itemize}
+      \item
+        where $character$ is one of \lstinline!char!, \lstinline!char8_t!\Since{20}, \lstinline!char16_t!, \lstinline!char32_t!
+      \end{itemize}
+    \item
+      \lstinline[mathescape]!(const $\;character\;$ *, std::size_t)!
+      \begin{itemize}
+      \item
+        where $character$ is one of \lstinline!char!, \lstinline!char8_t!\Since{20}, \lstinline!char16_t!, \lstinline!char32_t!
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Literal operator}{}
+  \begin{example}[Literal operator]
+    \sourceinput{snippets/literal_operator.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Literal operators in the standard library}{}
+  \begin{block}{Literal operators in the standard library}
+    \begin{itemize}
+    \item
+      \lstinline!operator""if!, \lstinline!operator""i!, \lstinline!operator""il! for \lstinline!std::complex!\Since{14}
+    \item
+      \lstinline!operator""h!, \lstinline!operator""min!, \lstinline!operator""s!, \lstinline!operator""ms!, \lstinline!operator""us!, \lstinline!operator""ns! for \lstinline!std::chrono::duration!\Since{14}
+    \item
+      \lstinline!operator""y! for \lstinline!std::chrono::year!\Since{20}
+    \item
+      \lstinline!operator""d! for \lstinline!std::chrono::day!\Since{20}
+    \item
+      \lstinline!operator""s! for \lstinline!std::string!\Since{14}
+    \item
+      \lstinline!operator""sv! for \lstinline!std::string_view!\Since{17}
+    \end{itemize}
+
+    They are all defined in inline namespaces inside \lstinline!std::literals!
+  \end{block}
+\end{frame}
+
+\subsection{Example: \texttt{string\_id}}
+
+\begin{frame}{Example: \texttt{string\_id}}{}
+  \begin{block}{Specifications for \texttt{string\_id}}
+    \begin{itemize}
+    \item
+      Define a \lstinline!string_id! that is an integer that represents a string
+      \begin{itemize}
+      \item
+        Need for a hash function: FNV-1a
+      \end{itemize}
+    \item
+      Have a literal operator for creating a \lstinline!string_id! from a string
+    \item
+      Possibly do all this at compile-time
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Implementation of \texttt{string\_id}}{}
+  \begin{example}[\texttt{string\_id}]
+    \small
+    \sourceinput{snippets/string_id.cc}
+  \end{example}
+\end{frame}
+
+
+\begin{frame}{Use of \texttt{string\_id}}{}
+  \begin{example}[\texttt{string\_id}]
+    \small
+    \sourceinput{snippets/string_id_use.cc}
+  \end{example}
+\end{frame}
+
+
+
+
+
 
 % mangling
 
 % copy elision
-
-
-% \begin{frame}{}{}
-%   \begin{block}{}
-%     \begin{itemize}
-%     \item
-%     \item
-%     \end{itemize}
-%   \end{block}
-% \end{frame}
