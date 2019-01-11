@@ -5,6 +5,7 @@
 
 \subsection{Class}
 
+% Source: https://en.cppreference.com/w/cpp/language/classes
 \begin{frame}{Class}{}
   \begin{definition}[Class]
     A \strong{class} is a user-defined type whose declaration begins with \lstinline!class! or \lstinline!struct!.
@@ -15,6 +16,8 @@
   \end{block}
 \end{frame}
 
+
+% Source: https://en.cppreference.com/w/cpp/language/classes
 \begin{frame}{Class members}{}
   \begin{block}{Class members}
     A class can have the following kinds of members:
@@ -62,6 +65,7 @@
 
 \subsubsection{Constructor and member initializer list}
 
+% Source: https://en.cppreference.com/w/cpp/language/initializer_list
 \begin{frame}{Constructor}{}
   \begin{definition}[Constructor]
     A \strong{constructor} is a special non-static member function of a class that is used to initialize objects of its class type.
@@ -88,6 +92,7 @@
   \end{block}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/initializer_list
 \begin{frame}{Initialization order}{}
   \begin{block}{Initialization order}
     \begin{enumerate}
@@ -123,6 +128,7 @@
 \end{frame}
 
 
+% Source: https://en.cppreference.com/w/cpp/language/initializer_list
 \begin{frame}{Member initializer list}{}
   \begin{definition}[Member initializer list]
     In the definition of a constructor of a class, a \strong{member initializer list} specifies the \emph{non-default} initializers for direct and virtual base subobjects and non-static data members.
@@ -141,6 +147,7 @@
 
 \subsubsection{Converting constructor}
 
+% Source: https://en.cppreference.com/w/cpp/language/converting_constructor
 \begin{frame}{Converting constructor and explicit constructors}{}
   \begin{definition}[Converting constructor]
     A \strong{converting constructor} is not declared with the specifier \lstinline!explicit!
@@ -170,9 +177,10 @@
 
 \subsubsection{Default constructor}
 
+% Source: https://en.cppreference.com/w/cpp/language/default_constructor
 \begin{frame}{Default constructor}{}
   \begin{definition}[Default constructor]
-    A default constructor is a constructor that can be called with no arguments (either defined with an empty parameter list, or with default arguments provided for every parameter).
+    A \strong{default constructor} is a constructor that can be called with no arguments (either defined with an empty parameter list, or with default arguments provided for every parameter).
   \end{definition}
 
   \begin{block}{Default constructor}
@@ -198,11 +206,12 @@
 \end{frame}
 
 
-\subsubsection{Copy and move constructors}
+\subsubsection{Copy/move constructor/assignment}
 
+% Source: https://en.cppreference.com/w/cpp/language/copy_constructor
 \begin{frame}{Copy constructor}{}
   \begin{definition}[Copy constructor]
-    A copy constructor of class \lstinline!T! is a non-template constructor whose first parameter is (generally) \lstinline!const T&!
+    A \strong{copy constructor} of class \lstinline!T! is a non-template constructor whose parameter is (generally) \lstinline!const T&!
   \end{definition}
 
   \begin{block}{Copy constructor}
@@ -231,10 +240,10 @@
   \end{block}
 \end{frame}
 
-
+% Source: https://en.cppreference.com/w/cpp/language/move_constructor
 \begin{frame}{Move constructor}{}
   \begin{definition}[Move constructor]
-    A move constructor of class \lstinline!T! is a non-template constructor whose first parameter is (generally) \lstinline!T&&!
+    A \strong{move constructor} of class \lstinline!T! is a non-template constructor whose parameter is (generally) \lstinline!T&&!
   \end{definition}
 
   \begin{block}{Move constructor}
@@ -269,12 +278,75 @@
   \end{example}
 \end{frame}
 
-% TODO: copy asssignment and move assignment
+% Source: https://en.cppreference.com/w/cpp/language/copy_assignment
+\begin{frame}{Copy assignment}{}
+  \begin{definition}[Copy assignment]
+    A \strong{copy assignment operator} of class \lstinline!T! is a non-template non-static member function with the name \lstinline!operator=! and whose parameter is (generally) \lstinline!const T&! and whose return type is \lstinline!T&!
+  \end{definition}
+
+  \begin{block}{Copy assignment}
+    \begin{itemize}
+    \item
+      If a copy assignment is not declared, it is implicitly declared, if possible or it is implicitly deleted otherwise
+    \item
+      A copy assignment can be:
+      \begin{itemize}
+      \item
+        Explicitely declared and defaulted with \lstinline! = default! after its declaration
+      \item
+        Explicitely deleted with \lstinline! = delete! after its declaration
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/move_assignment
+\begin{frame}{Move assignment}{}
+  \begin{definition}[Move assignment]
+    A \strong{move assignment operator} of class \lstinline!T! is a non-template non-static member function with the name \lstinline!operator=! and whose parameter is (generally) \lstinline!T&&! and whose return type is \lstinline!T&!
+  \end{definition}
+
+  \begin{block}{Move assignment}
+    \begin{itemize}
+    \item
+      If a move assignment is not declared, it is implicitly declared, if possible or it is implicitly deleted otherwise
+    \item
+      A move assignment can be:
+      \begin{itemize}
+      \item
+        Explicitely declared and defaulted with \lstinline! = default! after its declaration
+      \item
+        Explicitely deleted with \lstinline! = delete! after its declaration
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Copy and move assignment}{}
+  \begin{block}{Copy and move assignment}
+    If both copy and move assignment operators are provided, overload resolution selects:
+    \begin{itemize}
+    \item
+      the move assignment if the argument is an \emph{rvalue} (either a \emph{prvalue} such as a nameless temporary or an \emph{xvalue} such as the result of \lstinline!std::move!),
+    \item
+      the copy assignment if the argument is an \emph{lvalue} (named object or a function/operator returning lvalue reference)
+    \end{itemize}
+    If only the copy assignment is provided, all argument categories select it (as long as it takes its argument by value or as reference to const, since rvalues can bind to const references), which makes copy assignment the fallback for move assignment, when move is unavailable.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Copy and move assignments}{}
+  \begin{example}[Copy and move assignments]
+    \sourceinput{snippets/copy_move_assignments.cc}
+  \end{example}
+\end{frame}
+
 
 \subsection{Destructors}
 
 \subsubsection{Destructor}
 
+% Source: https://en.cppreference.com/w/cpp/language/destructor
 \begin{frame}{Destructor}{}
   \begin{definition}[Destructor]
     A \strong{destructor} is a special member function that is called when the lifetime of an object ends. The purpose of the destructor is to free the resources that the object may have acquired during its lifetime.
@@ -310,6 +382,7 @@
   \end{block}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/destructor
 \begin{frame}{Destructor call}{}
   \begin{block}{Destructor call}
     The destructor is called whenever an object's lifetime ends, which includes:
@@ -341,6 +414,7 @@
 
 \subsubsection{Rule of Three, Rule of Five, Rule of Zero}
 
+% Source: https://en.cppreference.com/w/cpp/language/rule_of_three
 \begin{frame}{Rule of Three}{}
   \begin{definition}[Rule of Three]
     If a class requires
@@ -360,12 +434,13 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Rule of Five}{}
+\begin{frame}{Rule of Three}{}
   \begin{example}[Rule of Three]
     \sourceinput{snippets/rule_of_three.cc}
   \end{example}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/rule_of_three
 \begin{frame}{Rule of Five}{}
   \begin{definition}[Rule of Five]
     Because the presence of a user-defined destructor, copy-constructor, or copy-assignment operator prevents implicit definition of the move constructor and the move assignment operator, any class for which move semantics are desirable, has to declare all five special member functions
@@ -382,6 +457,7 @@
   \end{example}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/rule_of_three
 \begin{frame}{Rule of Zero}{}
   \begin{definition}[Rule of Zero]
     Classes that have custom destructors, copy/move constructors or copy/move assignment operators should deal exclusively with ownership (which follows from the Single Responsibility Principle). Other classes should not have custom destructors, copy/move constructors or copy/move assignment operators.
@@ -396,6 +472,7 @@
 
 \subsubsection{Resource Acquisition Is Initialization (RAII)}
 
+% Source: https://en.cppreference.com/w/cpp/language/raii
 \begin{frame}{Resource Acquisition Is Initialization (RAII)}{}
   \begin{definition}[Resource Acquisition Is Initialization (RAII)]
     \strong{Resource Acquisition Is Initialization} (RAII), is a C++ programming technique which binds the life cycle of a resource that must be acquired before use to the lifetime of an object.
@@ -421,6 +498,7 @@
   \end{examples}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/raii
 \begin{frame}{RAII in Practice}{}
   \begin{block}{RAII in Practice}
     \begin{itemize}
@@ -448,7 +526,6 @@
   \end{block}
 \end{frame}
 
-
 \begin{frame}{Resource Acquisition Is Initialization}{}
   \begin{example}[Resource Acquisition Is Initialization]
     \sourceinput{snippets/raii.cc}
@@ -461,6 +538,7 @@
 
 \subsubsection{Derived classes}
 
+% Source: https://en.cppreference.com/w/cpp/language/derived_class
 \begin{frame}{Derived Classes}{}
   \begin{block}{Derived Classes}
     Any class may be declared as \emph{derived} from one or more \emph{base classes} which, in turn, may be derived from their own base classes, forming an inheritance hierarchy. Each base class:
@@ -489,8 +567,11 @@
   \end{example}
 \end{frame}
 
+% TODO: public/protected/private inheritance (with a table)
+
 \subsubsection{Virtual base classes}
 
+% Source: https://en.cppreference.com/w/cpp/language/derived_class
 \begin{frame}{Virtual base class}{}
   \begin{block}{Virtual base class}
     For each distinct base class that is specified \lstinline!virtual!, the most derived object contains only one base class subobject of that type, even if the class appears many times in the inheritance hierarchy (as long as it is inherited \lstinline!virtual! every time).
@@ -524,6 +605,7 @@
 
 \subsubsection{Empty Base Optimization (EBO)}
 
+% Source: https://en.cppreference.com/w/cpp/language/ebo
 \begin{frame}{Empty Base Optimization (EBO)}{}
   \begin{block}{Empty Base Optimization (EBO)}
     \strong{Empty Base Optimization} (EBO) allows the size of an empty base subobject to be zero
@@ -545,17 +627,192 @@
 
 \subsection{Polymorphism}
 
-%
-% vptr/vtable (https://www.geeksforgeeks.org/commonly-asked-c-interview-questions-set-1/)
-% override
-% RTTI
+\subsubsection{Virtual functions}
 
-%   - virtual destructor
+% Source: https://en.cppreference.com/w/cpp/language/virtual
+\begin{frame}{Virtual functions}{}
+  \begin{definition}[Virtual function]
+    A \strong{virtual function} is a non-static member function with the \lstinline!virtual! specifier. A virtual function supports dynamic dispatch, i.e. its behavior can be overridden in derived classes.
+  \end{definition}
+
+  \begin{block}{Virtual functions override}
+    A function that overrides a virtual function in a derived class must have the same:
+    \begin{itemize}
+    \item
+      name
+    \item
+      parameter type list (but not the return type)
+    \item
+      cv-qualifiers and ref qualifiers
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Remark}
+    A virtual function does not need to be visible (\lstinline!public! or \lstinline!protected!) to be overridden.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Virtual functions}{}
+  \begin{example}[Virtual functions]
+    \sourceinput{snippets/virtual_functions.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/virtual
+\begin{frame}{\texttt{override} and \texttt{final}}{}
+  \begin{block}{\texttt{override} and \texttt{final}}
+    \begin{itemize}
+    \item
+      If a function is declared with the specifier \lstinline!override!, but does not override a virtual function, the program is ill-formed
+    \item
+      If a function is declared with the specifier \lstinline!final!, and another function attempts to override it, the program is ill-formed
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{\texttt{override} and \texttt{final}}{}
+  \begin{example}[\texttt{override} and \texttt{final}]
+    \sourceinput{snippets/override_and_final.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Virtual destructors}
+
+% Source: https://en.cppreference.com/w/cpp/language/virtual
+\begin{frame}{Virtual destructor}{}
+  \begin{block}{Virtual destructor}
+    Even though destructors are not inherited, if a base class declares its destructor virtual, the derived destructor always overrides it. This makes it possible to delete dynamically allocated objects of polymorphic type through pointers to base.
+  \end{block}
+  \begin{block}{Important remark}
+    If a class is polymorphic (declares or inherits at least one virtual function), it must declare its destructor private.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Virtual destructor}{}
+  \begin{example}[Virtual destructor]
+    \sourceinput{snippets/virtual_destructor.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Pure virtual functions}
+
+% Source: https://en.cppreference.com/w/cpp/language/abstract_class
+\begin{frame}{Pure virtual functions and abstract classes}{}
+  \begin{definition}[Pure virtual function]
+    A \strong{pure virtual function} is a virtual function with the \emph{pure specifier} noted \lstinline!= 0!.
+  \end{definition}
+
+  \begin{definition}[Abstract class]
+    An \strong{abstract class} is a class that either defines or inherits at least one pure virtual function.
+  \end{definition}
+
+  \begin{block}{Remarks}
+    \begin{itemize}
+    \item
+      No objects of an abstract class can be created
+    \item
+      Abstract classes are used as base classes for concrete classes
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Pure virtual functions and abstract classes}{}
+  \begin{example}[Abstract class]
+    \sourceinput{snippets/abstract_class.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Virtual table}
+
+% Source: https://en.wikipedia.org/wiki/Virtual_method_table
+\begin{frame}{Virtual table and virtual table pointer}{}
+  \begin{definition}[Virtual table]
+    A \strong{virtual table} (or vtable) is a per-class table containing function pointers to virtual functions. It is generated by the compiler.
+  \end{definition}
+
+  \begin{definition}[Virtual table pointer]
+    A \strong{virtual table pointer} (or vptr) is a per-object pointer to a virtual table added by the constructor. The vptr is part of the object.
+  \end{definition}
+
+  \begin{block}{Call to a virtual function}
+    \begin{enumerate}
+    \item
+      Fetch the virtual table pointer of the object
+    \item
+      Call the function declared in the table pointed by the virtual table pointer
+    \end{enumerate}
+    Consequence: calling a virtual function requires an indirection!
+  \end{block}
+\end{frame}
+
+\begin{frame}{Virtual table and virtual table pointer}{}
+  \begin{example}[Virtual table and virtual table pointer]
+    \sourceinput{snippets/vtable_vptr.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Run-time type information (RTTI)}
+
+% Source: https://en.cppreference.com/w/cpp/language/dynamic_cast
+\begin{frame}{\texttt{dynamic\_cast}}{}
+  \begin{block}{\texttt{dynamic\_cast}}
+    A \strong{\lstinline!dynamic_cast!} safely converts pointers and references to classes up, down, and sideways along the inheritance hierarchy.
+
+    {
+      \hfill\lstinline[mathescape]!dynamic_cast<$type$>($expr$)!\hfill
+    }
+
+    \lstinline[mathescape]!$expr$! is:
+    \begin{itemize}
+    \item
+      A glvalue of a complete class type if \lstinline[mathescape]!$type$! is a reference
+    \item
+      A prvalue of a pointer to a complete class type if \lstinline[mathescape]!$type$! is a pointer
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Result of a \texttt{dynamic\_cast}}
+    \begin{itemize}
+    \item
+      If the cast is successful, \lstinline!dynamic_cast! returns a value of type \lstinline[mathescape]!$type$!.
+    \item
+      If the cast fails and \lstinline[mathescape]!$type$! is a pointer type, it returns a null pointer.
+    \item
+      If the cast fails and \lstinline[mathescape]!$type$! is a reference type, it throws an exception that matches a handler of type \lstinline!std::bad_cast!.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% TODO: example of dynamic_cast
+
+% Source: https://en.cppreference.com/w/cpp/language/typeid
+\begin{frame}{\texttt{typeid}}{}
+  \begin{block}{\texttt{typeid}}
+    The \lstinline!typeid! operator queries information of a type and returns an object of type \lstinline!const std::type_info&!. It can be used:
+    \begin{itemize}
+    \item
+      with a type
+    \item
+      with an expression
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{\texttt{typeid} with an expression}
+    \begin{itemize}
+    \item
+      If the expression is a glvalue expression that identifies an object of a polymorphic type, the \lstinline!typeid! expression evaluates the expression and then refers to the \lstinline!std::type_info! object that represents the dynamic type of the expression
+    \item
+      If expression is not a glvalue expression of polymorphic type, \lstinline!typeid! does not evaluate the expression, and the \lstinline!std::type_info! object it identifies represents the static type of the expression
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% TODO: example of typeid
 
 \subsection{PImpl My Ride}
 
-
 % - pimpl
+% https://en.cppreference.com/w/cpp/language/pimpl
 % https://cpppatterns.com/patterns/pimpl.html
 % https://wiki.qt.io/D-Pointer
 

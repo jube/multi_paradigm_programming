@@ -8,7 +8,7 @@ struct A {
 
   A(const A& o)
   : s(o.s), k(o.k)
-  { std::cout << "move failed!\n"; }
+  { }
 
   A(A&& o) noexcept
   : s(std::move(o.s))        // explicit move (class type)
