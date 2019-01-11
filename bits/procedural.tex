@@ -65,8 +65,8 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Example of variadic arguments}{}
-  \begin{example}
+\begin{frame}{Variadic arguments}{}
+  \begin{example}[Variadic arguments]
     \sourceinput{snippets/variadic_arguments.cc}
   \end{example}
 \end{frame}
@@ -213,7 +213,7 @@
       Easy types:
       \begin{itemize}
       \item
-        Cheap to copy: \lstinline!int! and all fundamental types, \lstinline!std::tuple<bool, int*>!, \ldots
+        Cheap to copy: all fundamental types, \lstinline!std::tuple<bool, int*>!, \ldots
       \item
         Impossible to copy: \lstinline!std::unique_ptr<T>!, \ldots
       \end{itemize}
