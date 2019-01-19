@@ -1,13 +1,331 @@
 \part{Functional programming}
 
-% algorithms
-%
-% functors
-% lambda
-%
-% function pointer
-%
-% std::function
-% std::bind
-%
-% member function pointer
+\section{Functional programming}
+
+\subsection{Functional programming}
+
+% Source: https://en.wikipedia.org/wiki/Functional_programming
+\begin{frame}{Functional programming}{}
+  \begin{block}{Functional programming concepts}
+    \begin{itemize}
+    \item
+      First-class and high order functions $\to$ \lstinline!std::function!
+    \item
+      Pure functions $\to$ \lstinline!constexpr!
+    \item
+      Recursion $\to$ OK
+    \item
+      Strict or lazy evaluation $\to$ strict!
+    \item
+      Type system $\to$ KO!
+    \item
+      Referential transparency $\to$ KO! (\lstinline!operator=!)
+    \item[$\to$]
+      \CCLang is not really a functional programming language
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\subsection{Function objects}
+
+% Source: https://en.cppreference.com/w/cpp/named_req/FunctionObject
+\begin{frame}{Function object}{}
+  \begin{definition}[Function object]
+    A \strong{function object} is an object that can be used of the left of the function call operator
+  \end{definition}
+
+  \begin{block}{Function objects}
+    \begin{itemize}
+    \item
+      Function pointer
+    \item
+      Object of a class with an overloaded \lstinline!operator()!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Call operator}{}
+  \begin{block}{Call operator}
+    The call operator \lstinline!operator()! can be overloaded in any class
+    \begin{itemize}
+    \item
+      it can take any number of arguments
+    \item
+      it can return anything
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Remark}
+    A function object can have a state
+  \end{block}
+\end{frame}
+
+\begin{frame}{Function object}{}
+  \begin{example}[Function object]
+    \sourceinput{snippets/function_object.cc}
+  \end{example}
+\end{frame}
+
+\subsection{Lambda expressions}
+
+% Source: https://en.cppreference.com/w/cpp/language/lambda
+\begin{frame}{Lambda expressions}{}
+  \begin{definition}[Lambda expressions]
+    A \strong{lambda expression} is a prvalue of unique class type (closure type) that provides an unamed function object capable of capturing variables in scope (closure).
+  \end{definition}
+
+  \begin{block}{Lambda expressions}
+    {
+      \hfill\lstinline[mathescape]![$\;captures\;$]($\;params\;$) \{ $\;body\;$ \}! or \lstinline[mathescape]![$\;captures\;$]($\;params\;$) -> $\;ret\;$ \{ $\;body\;$ \}!\hfill
+    }
+    \begin{itemize}
+    \item
+      \lstinline[mathescape]!$captures$! is a comma-separated list of captures
+    \item
+      \lstinline[mathescape]!$params$! is the list of parameters, as any function
+      \begin{itemize}
+      \item
+        The type of a parameter can be \lstinline!auto!\Since{14} $\to$ generic lambda
+      \end{itemize}
+    \item
+      \lstinline[mathescape]!$ret$! is the return type, if not present it is implied by the function return statements (or \lstinline!void! if it does not return any value)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/lambda
+\begin{frame}{Captures}{}
+  \begin{block}{Captures}
+    The \lstinline[mathescape]!$captures$! is a comma-separated list of zero or more captures, optionally beginning with the capture default. The only capture defaults are:
+
+    \begin{itemize}
+    \item
+      \lstinline!&! (implicitly capture the used automatic variables by reference)
+    \item
+      \lstinline!=! (implicitly capture the used automatic variables by copy).
+    \end{itemize}
+
+    An individual capture can be:
+
+    \begin{itemize}
+    \item
+      \lstinline[mathescape]!$identifier$! (simple by-copy capture)
+    \item
+      \lstinline[mathescape]!$identifier\;$ = $\;initializer$! (by-copy capture with initializer\Since{14})
+    \item
+      \lstinline[mathescape]!&$identifier$! (simple by-reference capture)
+    \item
+      \lstinline[mathescape]!&$identifier\;$ = $\;initializer$! (by-reference capture with initializer\Since{14})
+    \item
+      \lstinline[mathescape]!this! (simple by-reference capture of the current object)
+    \item
+      \lstinline[mathescape]!*this! (simple by-copy capture of the current object\Since{17})
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Lambda expressions}{}
+  \begin{example}[Lambda expressions]
+    \sourceinput{snippets/lambda_expression.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Lambda expressions with capture default}{}
+  \begin{example}[Lambda expressions with capture default]
+    \sourceinput{snippets/lambda_expression_with_default.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Conversion of a lambda expression}{}
+  \begin{block}{Conversion of a lambda expression}
+    A capture-less lambda expression can be converted to a function pointer.
+  \end{block}
+
+  \begin{example}[Lambda expressions]
+    \sourceinput{snippets/lambda_conversion.cc}
+  \end{example}
+\end{frame}
+
+
+\subsection{Generic function}
+
+% Source: https://en.cppreference.com/w/cpp/named_req/Callable
+\begin{frame}{Callable type}{}
+  \begin{definition}[Callable type]
+    A \strong{callable type} is a type \lstinline!T! for which the \lstinline!INVOKE! operation is applicable
+  \end{definition}
+
+  \begin{block}{Callable types}
+    Given \lstinline!f! an object of type \lstinline!T!, \lstinline[mathescape]!INVOKE(f, $t_1$, $t_2$, $\ldots$, $t_N$)! is equivalent to:
+    \begin{itemize}
+    \item
+      If \lstinline!f! is a pointer to member function of class \lstinline!T!:
+      \begin{itemize}
+      \item
+        If \lstinline[mathescape]!$t_1$! is of type \lstinline!T!, \lstinline[mathescape]!($t_1$.*f)($t_2$, $\ldots$, $t_N$)!
+      \item
+        If \lstinline[mathescape]!$t_1$! is a specialization of \lstinline!std::reference_wrapper!, \\ \hfill \lstinline[mathescape]!($t_1$.get().*f)($t_2$, $\ldots$, $t_N$)!\Since{17}
+      \item
+        Otherwise, \lstinline[mathescape]!((*$t_1$).*f)($t_2$, $\ldots$, $t_N$)!
+      \end{itemize}
+    \item
+      If \lstinline!f! is a pointer to data member of class \lstinline!T! and $N = 1$:
+      \begin{itemize}
+      \item
+        If \lstinline[mathescape]!$t_1$! is of type \lstinline!T!, \lstinline[mathescape]!$t_1$.*f!
+      \item
+        If \lstinline[mathescape]!$t_1$! is a specialization of \lstinline!std::reference_wrapper!, \lstinline[mathescape]!$t_1$.get().*f!\Since{17}
+      \item
+        Otherwise, \lstinline[mathescape]!(*$t_1$).*f!
+      \end{itemize}
+    \item
+      If \lstinline!f! is a function object, \lstinline[mathescape]!f($t_1$, $t_2$, $\ldots$, $t_N$)!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/operator_member_access
+% Source: https://en.cppreference.com/w/cpp/language/pointer#Pointers_to_data_members
+\begin{frame}{Pointer to member}{}
+  \begin{block}{Pointer to member access}
+    The member access operator expressions through pointers to members have one of the two forms:
+    \begin{itemize}
+    \item
+      \lstinline[mathescape]!$lhs$.*$rhs$! if \lstinline[mathescape]!$lhs$! is of class type \lstinline!T!
+    \item
+      \lstinline[mathescape]!$lhs$->*$rhs$! if \lstinline[mathescape]!$lhs$! is of type pointer to class type \lstinline!T!
+    \end{itemize}
+    \lstinline[mathescape]!$rhs$! is an expression of type pointer to member (data or function)
+  \end{block}
+
+  \begin{block}{Pointer to member}
+    A pointer to non-static member \lstinline!x! (data or function) which is a member of class \lstinline!C! can be initialized with the expression \lstinline!&C::x! exactly.
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Pointer to member}{}
+  \begin{example}[Pointer to member]
+    \sourceinput{snippets/pointer_to_member.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Callable in the standard library}{}
+  \begin{block}{Callable in the standard library}
+    \begin{itemize}
+    \item
+      Types:
+      \begin{itemize}
+      \item
+        \lstinline!std::function! can store any callable
+      \item
+        \lstinline!std::reference_wrapper! can store a reference to any callable
+      \item
+        \lstinline!std::packaged_task! can store any callable (invoked asynchronously)
+      \end{itemize}
+    \item
+      Functions that accepts any callable:
+      \begin{itemize}
+      \item
+        \lstinline!std::bind!
+      \item
+        \lstinline!std::thread::thread!
+      \item
+        \lstinline!std::call_once!
+      \item
+        \lstinline!std::async!
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{\texttt{std::function}}{}
+  \begin{example}[\texttt{std::function}]
+    \sourceinput{snippets/std_function.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/utility/functional/bind
+\begin{frame}{Partial application}{}
+  \begin{block}{Partial application}
+    \lstinline!std::bind! can be used for partial application of a function. More precisely, \lstinline[mathescape]!std::bind(f, $a_1$, $\ldots$, $a_n$)! generates a forwarding call wrapper for a callable object \lstinline!f!. Calling this wrapper is equivalent to invoking \lstinline!f! with some of its arguments bound to the arguments of \lstinline!std::bind! and unbound arguments replaced by the placeholders \lstinline!_1!, \lstinline!_2!, \lstinline!_3!, etc. of namespace \lstinline!std::placeholders!.
+  \end{block}
+
+  \begin{block}{Remark}
+    The arguments to \lstinline!std::bind! are copied or moved, and are never passed by reference unless wrapped in \lstinline!std::ref! or \lstinline!std::cref!.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Partial application}{}
+  \begin{example}[Partial application]
+    \sourceinput{snippets/std_bind.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Partial application}{}
+  \begin{example}[Partial application]
+    \sourceinput{snippets/std_bind_pointer_to_member.cc}
+  \end{example}
+\end{frame}
+
+
+% \subsection{Monadic types}?
+% std::optional?
+
+\subsection{High-order functions}
+
+\begin{frame}{High-order functions}{}
+  \begin{definition}[High-order function]
+    A \strong{high-order function} is a function that does at least one of the following:
+    \begin{itemize}
+    \item
+      takes one or more functions as arguments
+    \item
+      return a function as its result
+    \end{itemize}
+  \end{definition}
+  \begin{block}{High-order functions}
+    The three most well-known high-order functions are:
+    \begin{itemize}
+    \item
+      \texttt{map} $\to$ \lstinline!std::transform!
+    \item
+      \texttt{fold} $\to$ \lstinline!std::accumulate!
+    \item
+      \texttt{filter} $\to$ \lstinline!std::copy_if!
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/algorithm/transform
+\begin{frame}{\texttt{std::transform}}{}
+  \begin{example}[\texttt{std::transform}]
+    \sourceinput{snippets/std_transform.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/algorithm/accumulate
+\begin{frame}{\texttt{std::accumulate}}{}
+  \begin{example}[\texttt{std::accumulate}]
+    \sourceinput{snippets/std_accumulate.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/algorithm/copy
+\begin{frame}{\texttt{std::copy\_if}}{}
+  \begin{example}[\texttt{std::copy\_if}]
+    \sourceinput{snippets/std_copy_if.cc}
+  \end{example}
+\end{frame}
+
+
+% \begin{frame}{}{}
+%   \begin{block}{}
+%     \begin{itemize}
+%     \item
+%     \item
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
