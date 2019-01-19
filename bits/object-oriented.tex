@@ -567,7 +567,29 @@
   \end{example}
 \end{frame}
 
-% TODO: public/protected/private inheritance (with a table)
+
+\begin{frame}{Inheritance and member access}{}
+  \begin{block}{Inheritance and member access}
+    \begin{center}
+      \lstinline[mathescape]!struct B \{ \}; struct D : $\;specifier\;$ B \{ \};!
+
+      \bigskip
+
+      \begin{tabular}{|c|c|c|c|}
+      \hline
+      Inheritance           & \multicolumn{3}{|c|}{Member in \lstinline!B!} \\
+      \lstinline[mathescape]!$specifier$! & \lstinline!public!    & \lstinline!protected! & \lstinline!private! \\
+      \hline
+      \lstinline!public!    & \lstinline!public!    & \lstinline!protected! & - \\
+      \lstinline!protected! & \lstinline!protected! & \lstinline!protected! & - \\
+      \lstinline!private!   & \lstinline!private!   & \lstinline!private!   & - \\
+      \hline
+      \end{tabular}
+
+      Member access in \lstinline!D!
+    \end{center}
+  \end{block}
+\end{frame}
 
 \subsubsection{Virtual base classes}
 
@@ -612,9 +634,12 @@
   \end{block}
 
   \begin{block}{Explanation}
-    The size of any object or member subobject is required to be at least 1 even if the type is an empty class, in order to be able to guarantee that the addresses of distinct objects of the same type are always distinct.
-
-    However, base class subobjects are not so constrained, and can be completely optimized out from the object layout
+    \begin{itemize}
+    \item
+      The size of any object or member subobject is required to be at least 1 even if the type is an empty class, in order to be able to guarantee that the addresses of distinct objects of the same type are always distinct.
+    \item
+      However, base class subobjects are not so constrained, and can be completely optimized out from the object layout
+    \end{itemize}
   \end{block}
 \end{frame}
 
@@ -783,7 +808,11 @@
   \end{block}
 \end{frame}
 
-% TODO: example of dynamic_cast
+\begin{frame}{\texttt{dynamic\_cast}}{}
+  \begin{example}[\texttt{dynamic\_cast}]
+    \sourceinput{snippets/dynamic_cast.cc}
+  \end{example}
+\end{frame}
 
 % Source: https://en.cppreference.com/w/cpp/language/typeid
 \begin{frame}{\texttt{typeid}}{}
@@ -807,31 +836,88 @@
   \end{block}
 \end{frame}
 
-% TODO: example of typeid
+\begin{frame}{\texttt{typeid}}{}
+  \begin{example}[\texttt{typeid}]
+    \sourceinput{snippets/typeid.cc}
+  \end{example}
+\end{frame}
 
-\subsection{PImpl My Ride}
+\subsection{Idioms}
 
-% - pimpl
-% https://en.cppreference.com/w/cpp/language/pimpl
-% https://cpppatterns.com/patterns/pimpl.html
-% https://wiki.qt.io/D-Pointer
+\subsubsection{PImpl My Ride}
 
-\subsection{\texttt{const} correctness}
+% Source: https://en.cppreference.com/w/cpp/language/pimpl
+% Source: https://cpppatterns.com/patterns/pimpl.html
+% Source: https://wiki.qt.io/D-Pointer
+\begin{frame}{PImpl: Pointer to Implementation}{}
+  \begin{block}{PImpl: Pointer to Implementation}
+    \strong{PImpl} (Pointer to Implementation) (a.k.a. d-pointer or opaque pointer) is a technique to hide implemntation details of a class in order to achieve ABI stability.
+  \end{block}
 
-%
-% - const correctness
-% https://isocpp.org/wiki/faq/const-correctness
-%
-%
+  \begin{block}{PImpl in practice}
+    \sourceinput{snippets/pimpl.cc}
+  \end{block}
+\end{frame}
+
+\begin{frame}{PImpl or not PImpl}{}
+  \begin{block}{Advantages of PImpl}
+    \begin{itemize}
+    \item
+      Compilation firewall: a modification in \lstinline!Impl! does not require a recompilcation of all classes that use \lstinline!Foo!
+    \item
+      Move-friendly: a \lstinline!std::unique_ptr! is easy to move, especially in containers
+    \end{itemize}
+  \end{block}
+  \begin{block}{Drawbacks of PImpl}
+    \begin{itemize}
+    \item
+      Access overhead: an access to a member requires an indirection through a pointer
+    \item
+      Space overhead: the object requires an additional pointer
+    \item
+      Lifetime management: the implementation object is allocated on the heap
+    \item
+      Maintenance overhead: all the implementation has to be in a dedicated file
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\subsubsection{\texttt{const} correctness}
+
+% Source: https://isocpp.org/wiki/faq/const-correctness
+\begin{frame}{\texttt{const} correctness}{}
+  \begin{block}{\texttt{const} correctness}
+    \lstinline!const! correctness is a set of rules to offer a guarantee about the (non-)mutability of object:
+    \begin{itemize}
+    \item
+      Choose reference to \lstinline!const! or pointer to \lstinline!const! for parameters if you do not intend to modify the parameters
+    \item
+      Make a member function \lstinline!const! if the function does not modify the object
+    \item
+      If a member function is \lstinline!const! and returns a reference to a member, the reference should be \lstinline!const! or the function should return by value
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Benefits of \texttt{const} correctness}
+    \begin{itemize}
+    \item
+      The caller has the guarantee that a variable or an object will not be modified
+    \item
+      The compiler ensures that the callee respects the contract by emitting an error in case of modification of a \lstinline!const! object
+    \item
+      The \lstinline!const! property is spread through member function calls
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% overload const/non-const
+\begin{frame}{\texttt{const} correctness}{}
+  \begin{example}[\texttt{const} correctness]
+    \sourceinput{snippets/const_correctness.cc}
+  \end{example}
+\end{frame}
+
 
 
 % (N)RVO
-
-% \begin{frame}{}{}
-%   \begin{block}{}
-%     \begin{itemize}
-%     \item
-%     \item
-%     \end{itemize}
-%   \end{block}
-% \end{frame}
