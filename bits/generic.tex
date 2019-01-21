@@ -2,6 +2,307 @@
 
 \section{Generic programming}
 
+\subsection{Templates}
+
+\subsubsection{Usage}
+
+\begin{frame}{Template}{}
+  \begin{definition}[Template]
+    A \strong{template} is an entity that defines:
+    \begin{itemize}
+    \item
+      a family of classes (class template), which may be nested classes
+    \item
+      a family of functions (function template), which may be member functions
+    \item
+      an alias to a family of types (alias template)
+    \item
+      a family of variables (variable template)\Since{14}
+    \item
+      a concept\Since{20}
+    \end{itemize}
+  \end{definition}
+
+  \begin{block}{Template parameters}
+    Templates are parametrized by one or more template parameters, of three kinds:
+    \begin{itemize}
+    \item
+      type template parameters
+    \item
+      non-type template parameters
+    \item
+      template template parameters
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Template}{}
+  \begin{example}[Template]
+    \sourceinput{snippets/template.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/class_template
+% Source: https://en.cppreference.com/w/cpp/language/function_template
+\begin{frame}{Template explicit instantiation}{}
+  \begin{block}{Template explicit instantiation}
+    \begin{itemize}
+    \item
+      An \strong{explicit instantiation definition} forces instantiation of a template. It may appear in the program anywhere after the template definition, and for a given argument list, is only allowed to appear once in the entire program.
+      \begin{itemize}
+        \item
+          \lstinline[mathescape]!template class $\;name$<$arguments$>; // class!
+        \item
+          \lstinline[mathescape]!template $\;name$<$arguments$>($parameters$); // function!
+        \item
+          \lstinline[mathescape]!template $\;name$($parameters$); // function (short)!
+        \item
+          \lstinline[mathescape]!template $\;name$<$arguments$>; // variable (C++14)!
+      \end{itemize}
+    \item
+      An \strong{explicit instantiation declaration} skips implicit instantiation step: the code that would otherwise cause an implicit instantiation instead uses the explicit instantiation definition provided elsewhere.
+      \begin{itemize}
+        \item
+          \lstinline[mathescape]!extern template class $\;name$<$arguments$>; // class!
+        \item
+          \lstinline[mathescape]!extern template $\;name$<$arguments$>($parameters$); // function!
+        \item
+          \lstinline[mathescape]!extern template $\;name$($parameters$); // function (short)!
+        \item
+          \lstinline[mathescape]!extern template $\;name$<$arguments$>; // variable (C++14)!
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Template explicit instantiation}{}
+  \begin{example}[Template explicit instantiation]
+    \sourceinput{snippets/template_explicit_instantiation.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/template_specialization
+% Source: https://en.cppreference.com/w/cpp/language/partial_specialization
+\begin{frame}{Template specialization}{}
+  \begin{block}{Template specialization}
+    \begin{itemize}
+    \item
+      An \strong{explicit full template specialization} allows customizing the template code for a given set of template arguments. Class templates, function templates or variables templates (and some others) can be fully specialized.
+      \begin{center}
+        \lstinline[mathescape]!template<> $\;declaration$;!
+      \end{center}
+    \item
+      A \strong{partial template specialization} allows customizing \emph{class templates} for a given category of template arguments.
+      \begin{center}
+        \lstinline[mathescape]!template<$parameters$> class $\;name$<$arguments$> \{ $\;members\;$ \};!
+      \end{center}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Template specialization}{}
+  \begin{example}[Template specialization]
+    \sourceinput{snippets/template_specialization.cc}
+  \end{example}
+\end{frame}
+
+
+% Source: https://en.cppreference.com/w/cpp/language/function_template
+\begin{frame}{Template argument deduction for function template}{}
+  \begin{block}{Template argument deduction for function template}
+    In order to instantiate a function template, every template argument must be known, but not every template argument has to be specified. When possible, the compiler will deduce the missing template arguments from the function arguments.
+  \end{block}
+
+  \begin{example}[Template argument deduction for function template]
+    \sourceinput{snippets/template_function_argument_deduction.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/function_template
+\begin{frame}{Function overloads vs function specializations}{}
+  \begin{block}{Function overloads vs function specializations}
+    Only non-template and primary template overloads participate in overload resolution. The specializations are not overloads and are not considered. Only after the overload resolution selects the best-matching primary function template, its specializations are examined to see if one is a better match.
+  \end{block}
+
+  \begin{example}[Function overloads vs function specializations]
+    \sourceinput{snippets/template_function_overloads_vs_specializations.cc}
+  \end{example}
+\end{frame}
+
+
+% Source: https://en.cppreference.com/w/cpp/language/parameter_pack
+\begin{frame}{Parameter pack}{}
+  \begin{definition}[Template parameter pack]
+    A \strong{template parameter pack} is a template parameter that accepts zero or more template arguments (non-types, types, or templates).
+    It can appear in alias template, class template and function template parameter lists.
+    A template with at least one parameter pack is called a \strong{variadic template}.
+    \begin{itemize}
+    \item
+      \lstinline[mathescape]!$type\;$ ... $\;Name$!
+    \item
+      \lstinline[mathescape]!typename ... $\;Name$!
+    \item
+      \lstinline[mathescape]!template<$parameters$> typename ... $\;Name$!
+    \end{itemize}
+  \end{definition}
+
+  \begin{definition}[Function parameter pack]
+    A function parameter pack is a function parameter that accepts zero or more function arguments.
+    \begin{center}
+      \lstinline[mathescape]!$Name\;$ ... $\;name$!
+    \end{center}
+  \end{definition}
+\end{frame}
+
+\begin{frame}{Parameter pack}{}
+  \begin{example}[Parameter pack]
+    \sourceinput{snippets/parameter_pack.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/parameter_pack
+\begin{frame}{Parameter pack expansion}{}
+  \begin{block}{Parameter pack expansion}
+    A \strong{parameter pack expansion} occurs when a \emph{pattern} followed by an ellipsis, in which the name of at least one parameter pack appears at least once, is expanded into zero or more comma-separated instantiations of the pattern, where the name of the parameter pack is replaced by each of the elements from the pack, in order.
+  \end{block}
+  \begin{example}[Parameter pack expansion]
+    \sourceinput{snippets/parameter_pack_expansion.cc}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Parameter pack}{}
+  \begin{example}[Parameter pack]
+    \sourceinput{snippets/parameter_pack_print.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://en.cppreference.com/w/cpp/language/dependent_name
+\begin{frame}{Dependent name}{}
+  \begin{definition}[Dependent name]
+    A \strong{dependant name} is a name that depends on a type of type template parameters or a value of non-type template parameters, inside the definition of a template (both class template and function template).
+  \end{definition}
+
+  \begin{block}{Remark}
+%     \begin{itemize}
+%     \item
+      Name lookup and binding are different for dependent names and non-dependent names.
+%     \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Disambiguators for dependent name}
+  \begin{block}{Disambiguators for dependent name}
+    \begin{itemize}
+    \item
+      In a declaration or a definition of a template, including alias template, a name that is not a member of the \emph{current instantiation} and is dependent on a template parameter is not considered to be a type unless the keyword \lstinline!typename! is used
+      \begin{itemize}
+      \item[$\to$]
+        The keyword \lstinline!typename! may only be used in this way before qualified names (e.g. \lstinline!T::x!), but the names need not be dependent.
+      \end{itemize}
+    \item
+      In a template definition, a dependent name that is not a member of the \emph{current instantiation} is not considered to be a template name unless the disambiguation keyword \lstinline!template! is used
+        \begin{itemize}
+        \item[$\to$]
+          The keyword \lstinline!template! may only be used in this way after operators \lstinline!::! (scope resolution), \lstinline!->! (member access through pointer), and \lstinline!.! (member access)
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Dependent name}{}
+  \begin{example}[Dependent name]
+    \sourceinput{snippets/dependent_name.cc}
+  \end{example}
+\end{frame}
+
+
+% https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
+% CTAD?
+
+\subsubsection{Tricks}
+
+% SFINAE
+\begin{frame}{Substitution Failure Is Not An Error (SFINAE)}{}
+  \begin{block}{Substitution Failure Is Not An Error (SFINAE)}
+    When substituting the explicitly specified or deduced type for the template parameter fails, the specialization is discarded from the overload set instead of causing a compile error.
+  \end{block}
+
+  \begin{example}[SFINAE]
+    \sourceinput{snippets/sfinae.cc}
+  \end{example}
+\end{frame}
+
+% Source: https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c
+\begin{frame}{Perfect forwarding}{}
+  \begin{definition}[Forwarding reference]
+    A \strong{forwarding reference} is:
+    \begin{itemize}
+    \item
+      a function parameter of a function template declared as rvalue reference to cv-unqualified type template parameter of that same function template
+    \item
+      \lstinline!auto&&! except when deduced from a brace-enclosed initializer list
+    \end{itemize}
+  \end{definition}
+  \begin{block}{Reference collapsing}
+    The \strong{reference collapsing} rule applies when a reference to reference is created through type manipulation (template or typedef).
+
+    \begin{center}
+      \begin{tabular}{|c||c|c|}
+      \hline
+        if \ldots          & \lstinline!T\&! & \lstinline!T\&\&!  \\
+      \hline
+      \hline
+      \lstinline!T = X\&!  & \lstinline!X\&! & \lstinline!X\&!   \\
+      \hline
+      \lstinline!T = X\&!  & \lstinline!X\&! & \lstinline!X\&\&!  \\
+      \hline
+      \end{tabular}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Perfect forwarding}{}
+  \begin{block}{\texttt{std::forward}}
+    \begin{itemize}
+    \item
+      Forwards lvalues as either lvalues or as rvalues, depending on \lstinline!T!
+      \begin{itemize}
+      \item[$\to$]
+        When \lstinline!t! is a forwarding reference, this overload forwards the argument to another function with the value category it had when passed to the calling function.
+      \end{itemize}
+    \item
+      Forwards rvalues as rvalues and prohibits forwarding of rvalues as lvalues
+      \begin{itemize}
+      \item[$\to$]
+        This overload makes it possible to forward a result of an expression (such as function call), which may be rvalue or lvalue, as the original value category of a forwarding reference argument.
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \small
+  \sourceinput{snippets/std_forward.cc}
+\end{frame}
+
+\begin{frame}{Perfect forwarding}{}
+  \begin{example}[Perfect forwarding]
+    \sourceinput{snippets/perfect_forwarding.cc}
+  \end{example}
+\end{frame}
+
+% adl and generic programming
+% "using std::swap" example
+\begin{frame}{Templates and Argument Dependent Lookup}{}
+  \begin{block}{Templates and Argument Dependent Lookup}
+    ADL can be used in templates in order to call functions defined in the namespace of the template argument.
+  \end{block}
+  \begin{example}[Templates and Argument Dependent Lookup]
+    \sourceinput{snippets/adl_swap.cc}
+  \end{example}
+\end{frame}
+
+% fold expressions?
+
+
 \subsection{Type detection}
 
 \begin{frame}{Automatic type detection}{}
@@ -79,8 +380,7 @@
   \end{example}
 \end{frame}
 
-% https://herbsutter.com/2013/08/12/gotw-94-solution-aaa-style-almost-always-auto/
-
+% Source: https://herbsutter.com/2013/08/12/gotw-94-solution-aaa-style-almost-always-auto/
 \begin{frame}{When to use automatic type detection?}{Two schools}
   \begin{block}{School \#1: Only when necessary and/or convenient}
     \begin{itemize}
@@ -103,14 +403,120 @@
 \end{frame}
 
 
-% type traits
-%
-% SFINAE
-%
-% https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
-%
-% policy based programming
+\subsection{Idioms}
 
-% https://en.cppreference.com/w/cpp/language/dependent_name
+\subsubsection{Template meta-programming (TMP)}
+
+\begin{frame}{Template meta-programming (TMP)}{}
+  \begin{definition}[Template meta-programming]
+    \strong{Template meta-programming} is a technique in which templates are used by a compiler to generate source code, which is merged by the compiler with the rest of the source code and then compiled. The output of these templates include compile-time constants, data structures, and complete functions. The use of templates can be thought of as compile-time execution.
+  \end{definition}
+
+  \begin{block}{Remark}
+    \begin{itemize}
+    \item
+      In \CCLang, the template language is Turing-complete!
+    \item
+      The template language is a form a functional programming
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Template meta-programming}{}
+  \begin{example}[Template meta-programming]
+    \sourceinput{snippets/tmp.cc}
+  \end{example}
+\end{frame}
+
+
+% traits
+% type traits
 
 % if constexpr
+
+\begin{frame}{Constexpr If}{}
+  \begin{block}{Constexpr If}
+    The statement that begins with \lstinline!if constexpr! is known as the constexpr if statement.
+    In a constexpr if statement, the value of the condition must be a contextually converted constant expression of type \lstinline!bool!.
+  \end{block}
+
+  \begin{block}{Remark}
+    \lstinline!if constexpr! can replace SFINAE and other TMP tricks
+  \end{block}
+\end{frame}
+
+\begin{frame}{Constexpr If}{}
+  \begin{example}[Constexpr If]
+    \sourceinput{snippets/constexpr_if.cc}
+  \end{example}
+\end{frame}
+
+
+\subsubsection{Tag dispatching}
+
+% Source: https://www.boost.org/community/generic_programming.html
+\begin{frame}{Tag dispatching}{}
+  \begin{block}{Tag dispatching}
+    \strong{Tag dispatching} is a way of using function overloading to dispatch based on properties of a type, and is often used hand in hand with traits classes.
+    \begin{itemize}
+    \item
+      The relation between tag dispatching and traits classes is that the property used for dispatching is often accessed through a traits class.
+    \item
+       A \strong{tag} is simply a class whose only purpose is to convey some property for use in tag dispatching and similar techniques.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Traits}
+    A traits class provides a way of associating information with a compile-time entity (type, integral constant). Examples of traits in the standard library includes:
+    \begin{itemize}
+    \item
+      \lstinline!std::iterator_traits!
+    \item
+      \lstinline!std::numeric_limits!
+    \item
+      All the type traits in \lstinline!<type_traits>! (\lstinline!std::is_...!)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Tag dispatch}{}
+  \begin{example}[Tag dispatch]
+    \sourceinput{snippets/tag_dispatch.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Curiously recurring template pattern (CRTP)}
+
+% Source: https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+\begin{frame}{Curiously recurring template pattern (CRTP)}{}
+  \begin{definition}[Curiously recurring template pattern (CRTP)]
+    The \strong{curiously recurring template pattern} (CRTP) is an idiom in which a class \lstinline!X! derives from a class template instantiation using \lstinline!X! itself as template argument.
+  \end{definition}
+
+  \begin{block}{Use of CRTP}
+    The typical use of CRTP is \emph{static polymorphism}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Curiously recurring template pattern}{}
+  \begin{example}[Curiously recurring template pattern]
+    \sourceinput{snippets/crtp.cc}
+  \end{example}
+\end{frame}
+
+\subsubsection{Policy-based programming}
+
+% Source: https://en.wikipedia.org/wiki/Modern_C%2B%2B_Design#Policy-based_design
+\begin{frame}{Policy-based programming}{}
+  \begin{block}{Policy-based programming}
+    \strong{Policy-based programming} is a design approach based on an idiom known as \emph{policies}. It is a compile-time variant of the strategy pattern.
+
+    The central idiom in policy-based design is a class template (called the \emph{host class}), taking several type parameters as input, which are instantiated with types selected by the user (called \emph{policy classes}), each implementing a particular implicit interface (called a \emph{policy}), and encapsulating some orthogonal (or mostly orthogonal) aspect of the behavior of the instantiated host class.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Policy-based programming}{}
+  \begin{example}[Policy-based programming]
+    \sourceinput{snippets/policy-based_programming.cc}
+  \end{example}
+\end{frame}
