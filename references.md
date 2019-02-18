@@ -95,7 +95,7 @@
 - [Parameter pack - cppreference.com](https://en.cppreference.com/w/cpp/language/parameter_pack)
 - [Dependent names - cppreference.com](https://en.cppreference.com/w/cpp/language/dependent_name)
 - [SFINAE - cppreference.com](https://en.cppreference.com/w/cpp/language/sfinae)
-- [Forwarding references - cppreference.com](% Source: https://en.cppreference.com/w/cpp/language/reference#Forwarding_references)
+- [Forwarding references - cppreference.com](https://en.cppreference.com/w/cpp/language/reference#Forwarding_references)
 - [Perfect forwarding and universal references in C++ - Eli Bendersky](https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c)
 - [std::forward - cppreference.com](https://en.cppreference.com/w/cpp/utility/forward)
 - [Swap values - C++ Patterns](https://cpppatterns.com/patterns/swap-values.html)
