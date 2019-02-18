@@ -7,6 +7,7 @@
 \subsubsection{Usage}
 
 \begin{frame}{Template}{}
+  % Source: https://en.cppreference.com/w/cpp/language/templates
   \begin{definition}[Template]
     A \strong{template} is an entity that defines:
     \begin{itemize}
@@ -23,6 +24,7 @@
     \end{itemize}
   \end{definition}
 
+  % Source: https://en.cppreference.com/w/cpp/language/template_parameters
   \begin{block}{Template parameters}
     Templates are parametrized by one or more template parameters, of three kinds:
     \begin{itemize}
@@ -221,7 +223,7 @@
 
 \subsubsection{Tricks}
 
-% SFINAE
+% Source: https://en.cppreference.com/w/cpp/language/sfinae
 \begin{frame}{Substitution Failure Is Not An Error (SFINAE)}{}
   \begin{block}{Substitution Failure Is Not An Error (SFINAE)}
     When substituting the explicitly specified or deduced type for the template parameter fails, the specialization is discarded from the overload set instead of causing a compile error.
@@ -232,6 +234,7 @@
   \end{example}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/reference#Forwarding_references
 % Source: https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c
 \begin{frame}{Perfect forwarding}{}
   \begin{definition}[Forwarding reference]
@@ -261,6 +264,7 @@
   \end{block}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/utility/forward
 \begin{frame}{Perfect forwarding}{}
   \begin{block}{\texttt{std::forward}}
     \begin{itemize}
@@ -305,6 +309,7 @@
 
 \subsection{Type detection}
 
+% Source: https://en.cppreference.com/w/cpp/language/auto
 \begin{frame}{Automatic type detection}{}
   \begin{block}{Automatic type detection in \CC{11} and \CC{14}}
     \lstinline!auto! can be used to automatically detect a type in the following situations.
@@ -346,6 +351,7 @@
   \end{block}
 \end{frame}
 
+% Source: https://en.cppreference.com/w/cpp/language/decltype
 \begin{frame}{Type of an entity or expression}{}
   \begin{block}{Type of an entity}
     \lstinline!decltype! can be used to inspect the type of an entity:
@@ -433,7 +439,7 @@
 % type traits
 
 % if constexpr
-
+% Source: https://en.cppreference.com/w/cpp/language/if#Constexpr_If
 \begin{frame}{Constexpr If}{}
   \begin{block}{Constexpr If}
     The statement that begins with \lstinline!if constexpr! is known as the constexpr if statement.
