@@ -7,10 +7,10 @@ struct B {
 };
 
 struct C {
-  // implitly defined default constructor
+  // implicitly defined default constructor
 };
 
 struct D {
   D(int i) {  }
-  // no implitly defined default constructor
+  // no implicitly defined default constructor
 };
