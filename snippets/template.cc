@@ -8,7 +8,7 @@ std::size_t size(const T& container) {
   return container.size();
 }
 
-template<T>
+template<typename T>
 using Ptr = T*;
 
 template<class T>

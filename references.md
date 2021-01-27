@@ -43,7 +43,7 @@
 - [constexpr specifier - cppreference.com](https://en.cppreference.com/w/cpp/language/constexpr)
 - [User-defined literals - cppreference.com](https://en.cppreference.com/w/cpp/language/user_literal)
 
-## Part 3: Object-Oriented Programming
+## Part 3: Object-Oriented Programming (1/2)
 
 - [Classes - cppreference.com](https://en.cppreference.com/w/cpp/language/classes)
 - [Constructors and member initializer lists - cppreference.com](https://en.cppreference.com/w/cpp/language/initializer_list)
@@ -53,6 +53,9 @@
 - [Move constructor - cppreference.com](https://en.cppreference.com/w/cpp/language/move_constructor)
 - [Copy assignment - cppreference.com](https://en.cppreference.com/w/cpp/language/copy_assignment)
 - [Move assignment - cppreference.com](https://en.cppreference.com/w/cpp/language/move_assignment)
+
+## Part 4: Object-Oriented Programming (2/2)
+
 - [Destructors - cppreference.com](https://en.cppreference.com/w/cpp/language/destructor)
 - [The rule of three/five/zero - cppreference.com](https://en.cppreference.com/w/cpp/language/rule_of_three)
 - [RAII - cppreference.com](https://en.cppreference.com/w/cpp/language/raii)
@@ -70,7 +73,7 @@
 - [Const Correctness - C++ Super-FAQ](https://isocpp.org/wiki/faq/const-correctness)
 
 
-## Part 4: Functional Programming
+## Part 5: Functional Programming
 
 - [FunctionObject - cppreference.com](https://en.cppreference.com/w/cpp/named_req/FunctionObject)
 - [https://en.cppreference.com/w/cpp/language/lambda - cppreference.com](https://en.cppreference.com/w/cpp/language/lambda)
@@ -84,7 +87,7 @@
 - [std::accumulate - cppreference.com](https://en.cppreference.com/w/cpp/algorithm/accumulate)
 - [std::copy - cppreference.com](https://en.cppreference.com/w/cpp/algorithm/copy)
 
-## Part 5: Generic Programming
+## Part 6: Generic Programming
 
 - [Templates - cppreference.com](https://en.cppreference.com/w/cpp/language/templates)
 - [Template parameters and template arguments - cppreference.com](https://en.cppreference.com/w/cpp/language/template_parameters)
