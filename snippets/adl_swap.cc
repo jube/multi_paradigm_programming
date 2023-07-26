@@ -1,7 +1,7 @@
 template<typename T>
-void maybe_swap(bool b, T& a, T& b) {
+void maybe_swap(bool cond, T& a, T& b) {
   using std::swap;
-  if (b) {
+  if (cond) {
     swap(a, b);
   }
 }
