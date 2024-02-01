@@ -11,5 +11,5 @@ int main() {
     A* a = &d;  // upcast, dynamic_cast may be used
     D* new_d = dynamic_cast<D*>(a); // downcast
     B* new_b = dynamic_cast<B*>(a); // sidecast
-    E* e = dynamic_cast<E*>(e);     // = nullptr
+    E* e = dynamic_cast<E*>(a);     // = nullptr
 }
