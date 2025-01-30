@@ -6,7 +6,7 @@ struct A {
 
   A& operator=(const A& other) {
     s = other.s;
-    k = other.h;
+    k = other.k;
     return *this;
   }
 

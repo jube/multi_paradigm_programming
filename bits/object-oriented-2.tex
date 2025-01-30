@@ -73,7 +73,7 @@
     \begin{tikzpicture}
       \node[draw] (IO) at ( 0, 0) { \lstinline!std::iostream! } ;
       \node[draw] (I) at (-2,-1) { \lstinline!std::istream! } ;
-      \node[draw] (O) at ( 2,-1) { \lstinline!std::otream! } ;
+      \node[draw] (O) at ( 2,-1) { \lstinline!std::ostream! } ;
       \node[draw] (B) at ( 0,-2) { \lstinline!std::ios! } ;
 
       \draw[->,>=stealth] (IO) -- (I) ;
@@ -178,7 +178,7 @@
     Even though destructors are not inherited, if a base class declares its destructor virtual, the derived destructor always overrides it. This makes it possible to delete dynamically allocated objects of polymorphic type through pointers to base.
   \end{block}
   \begin{block}{Important remark}
-    If a class is polymorphic (declares or inherits at least one virtual function), it must declare its destructor private.
+    If a class is polymorphic (declares or inherits at least one virtual function), it must declare its destructor \lstinline!virtual!.
   \end{block}
 \end{frame}
 
